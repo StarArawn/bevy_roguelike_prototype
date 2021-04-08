@@ -9,7 +9,7 @@ fn main() {
         .insert_resource(WindowDescriptor {
             width: 1270.0,
             height: 720.0,
-            title: String::from("rouge-like-prototype"),
+            title: String::from("rogue-like-prototype"),
             ..Default::default()
         })
         .add_plugins(DefaultPlugins)
