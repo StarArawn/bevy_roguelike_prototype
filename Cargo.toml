@@ -1,5 +1,5 @@
 [package]
-name = "rouge-like-prototype"
+name = "rogue-like-prototype"
 version = "0.1.0"
 authors = ["John"]
 edition = "2018"
