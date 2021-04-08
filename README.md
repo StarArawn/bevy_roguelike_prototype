@@ -1,4 +1,4 @@
-# bevy_rougelike_prototype
+# bevy_roguelike_prototype
 A rouge-like game built in bevy and rust.
 
 ### Credits:
