@@ -1,7 +1,6 @@
 use bevy::prelude::*;
 use bevy_tilemap::prelude::*;
 
-mod map;
 mod game;
 
 fn main() {
@@ -15,6 +14,5 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_plugins(TilemapDefaultPlugins)
         .add_plugin(game::GamePlugin)
-        .add_plugin(map::MapPlugin)
         .run();
 }

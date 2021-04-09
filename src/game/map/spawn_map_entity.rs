@@ -28,10 +28,24 @@ pub fn spawn_map_entity(
         let tilemap = Tilemap::builder()
             .auto_chunk()
             .topology(GridTopology::Square)
-            .dimensions(2, 2)
-            .chunk_dimensions(8, 8, 1)
+            .dimensions(10, 10)
+            .chunk_dimensions(32, 32, 1)
             .texture_dimensions(16, 16)
-            .z_layers(1)
+            .z_layers(2)
+            .add_layer(
+                TilemapLayer {
+                    kind: LayerKind::Dense,
+                    ..Default::default()
+                },
+                0,
+            )
+            .add_layer(
+                TilemapLayer {
+                    kind: LayerKind::Sparse,
+                    ..Default::default()
+                },
+                1,
+            )
             .texture_atlas(atlas_handle)
             .finish()
             .unwrap();
