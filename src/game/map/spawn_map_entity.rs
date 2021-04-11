@@ -11,6 +11,7 @@ pub fn spawn_map_entity(
     mut commands: Commands,
     mut tilemap_atlas_handles: ResMut<TilemapAtlasHandles>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
+    mut textures: ResMut<Assets<Texture>>,
     asset_server: Res<AssetServer>
 ) {
     if tilemap_atlas_handles.loaded {
@@ -21,6 +22,11 @@ pub fn spawn_map_entity(
         asset_server.get_group_load_state(tilemap_atlas_handles.handles.iter().map(|handle| handle.id))
     {
         let tilemap_atlas_handle = tilemap_atlas_handles.handles[0].clone().typed::<Texture>();
+        let atlas_texture = textures.get_mut(tilemap_atlas_handle.clone()).unwrap();
+        atlas_texture.sampler.min_filter = bevy::render::texture::FilterMode::Nearest;
+        atlas_texture.sampler.mag_filter = bevy::render::texture::FilterMode::Nearest;
+        atlas_texture.sampler.mipmap_filter = bevy::render::texture::FilterMode::Nearest;
+
         let texture_atlas = TextureAtlas::from_grid(tilemap_atlas_handle, Vec2::new(16.0, 16.0), 6, 16);
     
         let atlas_handle = texture_atlases.add(texture_atlas);

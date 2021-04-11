@@ -29,7 +29,7 @@ pub fn camera_movement(
     keyboard_input: Res<Input<KeyCode>>,
     mut query: Query<(&Camera, &mut Transform)>,
 ) {
-    for (_, mut transform) in query.iter_mut() {
+    for (camera, mut transform) in query.iter_mut() {
         let mut direction = Vec3::ZERO;
         let scale = transform.scale.x;
 
@@ -50,12 +50,12 @@ pub fn camera_movement(
         }
 
         if keyboard_input.pressed(KeyCode::Z) && scale < 100. {
-            let scale = scale + (time.delta_seconds() * 1.1);
+            let scale = ((scale + (time.delta_seconds() * 1.5)) * 100.0).round() / 100.0;
             transform.scale = Vec3::new(scale, scale, scale);
         }
 
         if keyboard_input.pressed(KeyCode::X) && scale > 1.1 {
-            let scale = scale - (time.delta_seconds() * 1.1);
+            let scale = ((scale - (time.delta_seconds() * 1.5)) * 100.0).round() / 100.0;
             transform.scale = Vec3::new(scale, scale, scale);
         }
 
