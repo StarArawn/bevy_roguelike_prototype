@@ -1,12 +1,12 @@
 #[derive(Clone, Eq, PartialEq, Debug, Hash)]
 pub enum GameState {
-    // Loading,
+    Loading,
     Generating,
     Playing,
 }
 
 impl Default for GameState {
     fn default() -> Self {
-        GameState::Generating
+        GameState::Loading
     }
 }

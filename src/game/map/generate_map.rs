@@ -4,6 +4,7 @@ use noise::{Fbm, MultiFractal, NoiseFn, Seedable};
 use pathfinding::prelude::{absdiff, astar};
 use rand::{Rng, prelude::ThreadRng, thread_rng};
 use crate::game::GameState;
+use super::Map;
 
 fn get_island_shape(x: f64, y: f64) -> f64 {
     let a = 1.0;
@@ -161,12 +162,16 @@ pub fn find_road_path(road_points: &Vec<Vec2>, tilemap: &mut Tilemap) -> Vec<(i3
     road_path
 }
 
-pub fn generate_map(mut game_state: ResMut<State<GameState>>, mut map_query: Query<&mut Tilemap>) {
+pub fn generate_map(
+    mut game_state: ResMut<State<GameState>>,
+    mut map: ResMut<Map>,
+    mut tilemap_query: Query<&mut Tilemap>
+) {
     if *game_state.current() == GameState::Playing {
         return;
     }
 
-    for mut tilemap in map_query.iter_mut() {
+    for mut tilemap in tilemap_query.iter_mut() {
 
         // Generate a seed for the map
         let mut random = thread_rng();
@@ -228,8 +233,8 @@ pub fn generate_map(mut game_state: ResMut<State<GameState>>, mut map_query: Que
         let mut road_points = generate_road(&mut tilemap, &mut random);
         road_points.push(road_points[0]);
 
-        find_road_path(&road_points, &mut tilemap);
-
+        let road_path = find_road_path(&road_points, &mut tilemap);
+        map.road_path = road_path;
 
         for x in -half_map_width..half_map_width {
             for y in -half_map_height..half_map_height {
