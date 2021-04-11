@@ -29,7 +29,7 @@ pub fn camera_movement(
     keyboard_input: Res<Input<KeyCode>>,
     mut query: Query<(&Camera, &mut Transform)>,
 ) {
-    for (camera, mut transform) in query.iter_mut() {
+    for (_, mut transform) in query.iter_mut() {
         let mut direction = Vec3::ZERO;
         let scale = transform.scale.x;
 
