@@ -167,10 +167,6 @@ pub fn generate_map(
     mut map: ResMut<Map>,
     mut tilemap_query: Query<&mut Tilemap>
 ) {
-    if *game_state.current() == GameState::Playing {
-        return;
-    }
-
     for mut tilemap in tilemap_query.iter_mut() {
 
         // Generate a seed for the map

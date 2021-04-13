@@ -21,9 +21,15 @@ impl Plugin for GamePlugin {
             .add_system_set(
                 SystemSet::on_enter(GameState::Generating)
                     .with_system(map::spawn_map_entity.system())
+                        .label("spawn_map")
+            )
+            .add_system_set(
+                SystemSet::on_update(GameState::Generating)   
+                    .with_system(map::generate_map.system())
+                    .after("spawn_map")
                     .with_system(player::spawn_player.system())
-            )    
-            .add_system(map::generate_map.system())
+                    .after("spawn_map")
+            )
             .add_system(camera::camera_movement.system())
             .add_system(player::movement.system())
             .add_plugin(map::MapPlugin);
