@@ -2,9 +2,10 @@ use bevy::prelude::*;
 
 mod camera;
 mod game_state;
-mod map;
-mod player;
+mod gameplay;
 mod loading;
+mod map;
+mod timing;
 
 pub use game_state::GameState;
 
@@ -14,6 +15,8 @@ impl Plugin for GamePlugin {
     fn build(&self, app: &mut AppBuilder) {
         app
             .add_state(GameState::default())
+            .init_resource::<timing::Timing>()
+            .add_system(timing::update.system())
             .add_system_set(
                 SystemSet::on_update(GameState::Loading)
                     .with_system(loading::loading.system())
@@ -27,11 +30,22 @@ impl Plugin for GamePlugin {
                 SystemSet::on_update(GameState::Generating)   
                     .with_system(map::generate_map.system())
                     .after("spawn_map")
-                    .with_system(player::spawn_player.system())
+                    .with_system(gameplay::player::spawn_player.system())
                     .after("spawn_map")
             )
-            .add_system(camera::camera_movement.system())
-            .add_system(player::movement.system())
+            .add_system_set(
+                // Gameplay update
+                SystemSet::on_update(GameState::Playing)
+                    .label("gameplay_update")
+                    .with_system(gameplay::player::movement.system())                   
+            )
+            .add_system_set(
+                // Realtime update
+                // Used for non-gameplay items that should update every frame.
+                SystemSet::on_update(GameState::Playing)
+                    .label("realtime_update")
+                    .with_system(camera::camera_movement.system())
+            )
             .add_plugin(map::MapPlugin);
     }
 }

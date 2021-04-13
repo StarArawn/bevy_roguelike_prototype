@@ -1,8 +1,8 @@
-use bevy::{prelude::*, render::texture};
+use bevy::prelude::*;
 
 mod movement;
 mod player;
-pub use player::{Player};
+pub use player::Player;
 
 pub use movement::movement;
 
