@@ -1,6 +1,8 @@
 use bevy::{prelude::*};
 use bevy_tilemap::prelude::*;
 
+use crate::game::camera::CustomOrthographicCameraBundle;
+
 #[derive(Default, Clone)]
 pub struct TilemapAtlasHandles {
     pub handles: Vec<HandleUntyped>,
@@ -59,7 +61,7 @@ pub fn spawn_map_entity(
 
     commands
         .spawn()
-        .insert_bundle(OrthographicCameraBundle::new_2d());
+        .insert_bundle(CustomOrthographicCameraBundle::new_2d());
     commands
         .spawn()
         .insert_bundle(tilemap_components);

@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, render::RenderSystem};
 
 mod camera;
 mod game_state;
@@ -8,6 +8,7 @@ mod map;
 mod timing;
 
 pub use game_state::GameState;
+use self::camera::CustomOrthographicProjection;
 
 pub struct GamePlugin;
 
@@ -16,6 +17,7 @@ impl Plugin for GamePlugin {
         app
             .add_state(GameState::default())
             .init_resource::<timing::Timing>()
+            .register_type::<CustomOrthographicProjection>()
             .add_system(timing::update.system())
             .add_system_set(
                 SystemSet::on_update(GameState::Loading)
@@ -45,6 +47,12 @@ impl Plugin for GamePlugin {
                 SystemSet::on_update(GameState::Playing)
                     .label("realtime_update")
                     .with_system(camera::camera_movement.system())
+            )
+            .add_system_to_stage(
+                CoreStage::PostUpdate,
+                bevy::render::camera::camera_system::<CustomOrthographicProjection>
+                    .system()
+                    .before(RenderSystem::VisibleEntities),
             )
             .add_plugin(map::MapPlugin);
     }
