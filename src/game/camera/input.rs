@@ -3,6 +3,8 @@ use bevy::{
     prelude::*,
     render::camera::Camera,
 };
+use bevy::render::camera::CameraProjection;
+use super::CustomOrthographicProjection;
 
 pub struct KeyboardConf {
     pub forward: Box<[KeyCode]>,
@@ -26,12 +28,13 @@ impl Default for KeyboardConf {
 
 pub fn camera_movement(
     time: Res<Time>,
+    windows: Res<Windows>,
     keyboard_input: Res<Input<KeyCode>>,
-    mut query: Query<(&Camera, &mut Transform)>,
+    mut query: Query<(&mut Camera, &mut Transform, &mut CustomOrthographicProjection)>,
 ) {
-    for (_, mut transform) in query.iter_mut() {
+    for (mut camera, mut transform, mut projection) in query.iter_mut() {
         let mut direction = Vec3::ZERO;
-        let scale = transform.scale.x;
+        let scale = projection.scale;
 
         if keyboard_input.pressed(KeyCode::A) {
             direction -= Vec3::new(1.0, 0.0, 0.0);
@@ -49,15 +52,19 @@ pub fn camera_movement(
             direction -= Vec3::new(0.0, 1.0, 0.0);
         }
 
-        if keyboard_input.pressed(KeyCode::Z) && scale < 100. {
+        if keyboard_input.pressed(KeyCode::Z) && scale < 6.0 {
             let scale = ((scale + (time.delta_seconds() * 1.5)) * 100.0).round() / 100.0;
-            transform.scale = Vec3::new(scale, scale, scale);
+            projection.scale = scale;
         }
 
-        if keyboard_input.pressed(KeyCode::X) && scale > 1.1 {
+        if keyboard_input.pressed(KeyCode::X) && scale > 0.5 {
             let scale = ((scale - (time.delta_seconds() * 1.5)) * 100.0).round() / 100.0;
-            transform.scale = Vec3::new(scale, scale, scale);
+            projection.scale = scale;
         }
+
+        projection.update(windows.get_primary().unwrap().width(), windows.get_primary().unwrap().height());
+        camera.projection_matrix = projection.get_projection_matrix();
+        camera.depth_calculation = projection.depth_calculation();
 
         transform.translation += time.delta_seconds() * direction * 1000.;
     }

@@ -17,10 +17,10 @@ pub struct CustomOrthographicProjection {
 impl CameraProjection for CustomOrthographicProjection {
     fn get_projection_matrix(&self) -> Mat4 {
         Mat4::orthographic_rh(
-            self.left * self.scale,
-            self.right * self.scale,
-            self.bottom * self.scale,
-            self.top * self.scale,
+            (self.left * self.scale).round(),
+            (self.right * self.scale).round(),
+            (self.bottom * self.scale).round(),
+            (self.top * self.scale).round(),
             self.near,
             self.far,
         )
@@ -29,8 +29,8 @@ impl CameraProjection for CustomOrthographicProjection {
     fn update(&mut self, width: f32, height: f32) {
         match (&self.scaling_mode, &self.window_origin) {
             (ScalingMode::WindowSize, WindowOrigin::Center) => {
-                let half_width = width / 4.0;
-                let half_height = height / 4.0;
+                let half_width = width / 2.0;
+                let half_height = height / 2.0;
                 self.left = -half_width;
                 self.right = half_width;
                 self.top = half_height;
