@@ -47,6 +47,7 @@ impl Plugin for GamePlugin {
                 SystemSet::on_update(GameState::Playing)
                     .label("realtime_update")
                     .with_system(camera::camera_movement.system())
+                    .with_system(gameplay::enemy::spawner::tick.system())
             )
             .add_system_to_stage(
                 CoreStage::PostUpdate,

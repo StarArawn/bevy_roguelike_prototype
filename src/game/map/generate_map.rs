@@ -3,7 +3,7 @@ use bevy::{prelude::*};
 use noise::{Fbm, MultiFractal, NoiseFn, Seedable};
 use pathfinding::prelude::{absdiff, astar};
 use rand::{Rng, prelude::ThreadRng, thread_rng};
-use crate::game::GameState;
+use crate::game::{GameState, gameplay::enemy::spawner};
 use super::Map;
 
 fn get_island_shape(x: f64, y: f64) -> f64 {
@@ -44,7 +44,6 @@ fn generate_road(tilemap: &mut Tilemap, random: &mut ThreadRng) -> Vec<Vec2> {
                 Some(tile) => {
                     if tile.index == 19 {
                         let range = 30..(ray_index - 2);
-                        dbg!(&range);
                         let random_ray_position = random.gen_range(range);
                         let road_position: Vec2 = current_direction * (random_ray_position as f32);
                         road_points.push(road_position);
@@ -163,6 +162,9 @@ pub fn find_road_path(road_points: &Vec<Vec2>, tilemap: &mut Tilemap) -> Vec<(i3
 }
 
 pub fn generate_map(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    mut materials: ResMut<Assets<ColorMaterial>>,
     mut game_state: ResMut<State<GameState>>,
     mut map: ResMut<Map>,
     mut tilemap_query: Query<&mut Tilemap>
@@ -231,6 +233,10 @@ pub fn generate_map(
 
         let road_path = find_road_path(&road_points, &mut tilemap);
         map.road_path = road_path;
+
+        let random_road_index = random.gen_range(0..map.road_path.len() - 1);
+        let road_point = map.road_path[random_road_index];
+        spawner::spawn(&mut commands, &asset_server, &mut materials, Vec2::new(road_point.0 as f32 * 16.0, road_point.1 as f32 * 16.0) + Vec2::new(8.0, 8.0));
 
         for x in -half_map_width..half_map_width {
             for y in -half_map_height..half_map_height {

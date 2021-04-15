@@ -10,7 +10,6 @@ pub fn loading(
     tilemap_atlas_handles: Res<TilemapAtlasHandles>,
 ) {
     if get_has_map_assets(asset_server, tilemap_atlas_handles) {
-        dbg!("Changing state to generating");
         game_state.set(GameState::Generating).unwrap();
     }
 }
