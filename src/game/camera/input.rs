@@ -4,7 +4,7 @@ use bevy::{
     render::camera::Camera,
 };
 use bevy::render::camera::CameraProjection;
-use crate::game::GameState;
+use crate::game::{GameState, gameplay::battle};
 
 use super::CustomOrthographicProjection;
 
@@ -29,12 +29,29 @@ impl Default for KeyboardConf {
 }
 
 pub fn camera_movement(
+    asset_server: Res<AssetServer>,
+    mut commands: Commands,
     mut game_state: ResMut<State<GameState>>,
+    mut keyboard_input: ResMut<Input<KeyCode>>,
+    mut materials: ResMut<Assets<ColorMaterial>>,
+    mut query: Query<(&mut Camera, &mut Transform, &mut CustomOrthographicProjection)>,
     time: Res<Time>,
     windows: Res<Windows>,
-    mut keyboard_input: ResMut<Input<KeyCode>>,
-    mut query: Query<(&mut Camera, &mut Transform, &mut CustomOrthographicProjection)>,
 ) {
+    if keyboard_input.just_pressed(KeyCode::P) {
+        if *game_state.current() == GameState::MapView {
+            game_state.set(GameState::BattleView).unwrap();
+            battle::spawn_battle_screen(battle::BattleLocation::Mountains, &mut commands, &asset_server, &mut materials);
+        } else if *game_state.current() == GameState::BattleView {
+            game_state.set(GameState::MapView).unwrap();
+        }
+        keyboard_input.update();
+    }
+
+    if *game_state.current() == GameState::BattleView {
+        return;
+    }
+
     for (mut camera, mut transform, mut projection) in query.iter_mut() {
         let mut direction = Vec3::ZERO;
         let scale = projection.scale;
@@ -63,15 +80,6 @@ pub fn camera_movement(
         if keyboard_input.pressed(KeyCode::X) && scale > 0.5 {
             let scale = ((scale - (time.delta_seconds() * 1.5)) * 100.0).round() / 100.0;
             projection.scale = scale;
-        }
-
-        if keyboard_input.just_pressed(KeyCode::P) {
-            if *game_state.current() == GameState::MapView {
-                game_state.set(GameState::BattleView).unwrap();
-            } else if *game_state.current() == GameState::BattleView {
-                game_state.set(GameState::MapView).unwrap();
-            }
-            keyboard_input.update();
         }
 
         projection.update(windows.get_primary().unwrap().width(), windows.get_primary().unwrap().height());
