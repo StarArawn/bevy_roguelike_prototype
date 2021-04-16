@@ -1,7 +1,7 @@
 use bevy::{prelude::*};
 use bevy_tilemap::prelude::*;
 
-use crate::game::camera::CustomOrthographicCameraBundle;
+use crate::game::{GameState, camera::CustomOrthographicCameraBundle};
 
 #[derive(Default, Clone)]
 pub struct TilemapAtlasHandles {
@@ -64,5 +64,6 @@ pub fn spawn_map_entity(
         .insert_bundle(CustomOrthographicCameraBundle::new_2d());
     commands
         .spawn()
+        .insert(GameState::MapView)
         .insert_bundle(tilemap_components);
 }

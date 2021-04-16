@@ -4,6 +4,8 @@ use bevy::{
     render::camera::Camera,
 };
 use bevy::render::camera::CameraProjection;
+use crate::game::GameState;
+
 use super::CustomOrthographicProjection;
 
 pub struct KeyboardConf {
@@ -27,9 +29,10 @@ impl Default for KeyboardConf {
 }
 
 pub fn camera_movement(
+    mut game_state: ResMut<State<GameState>>,
     time: Res<Time>,
     windows: Res<Windows>,
-    keyboard_input: Res<Input<KeyCode>>,
+    mut keyboard_input: ResMut<Input<KeyCode>>,
     mut query: Query<(&mut Camera, &mut Transform, &mut CustomOrthographicProjection)>,
 ) {
     for (mut camera, mut transform, mut projection) in query.iter_mut() {
@@ -60,6 +63,15 @@ pub fn camera_movement(
         if keyboard_input.pressed(KeyCode::X) && scale > 0.5 {
             let scale = ((scale - (time.delta_seconds() * 1.5)) * 100.0).round() / 100.0;
             projection.scale = scale;
+        }
+
+        if keyboard_input.just_pressed(KeyCode::P) {
+            if *game_state.current() == GameState::MapView {
+                game_state.set(GameState::BattleView).unwrap();
+            } else if *game_state.current() == GameState::BattleView {
+                game_state.set(GameState::MapView).unwrap();
+            }
+            keyboard_input.update();
         }
 
         projection.update(windows.get_primary().unwrap().width(), windows.get_primary().unwrap().height());

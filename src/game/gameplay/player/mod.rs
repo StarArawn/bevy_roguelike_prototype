@@ -6,6 +6,8 @@ pub use player::Player;
 
 pub use movement::movement;
 
+use crate::game::GameState;
+
 pub fn spawn_player(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
@@ -22,5 +24,6 @@ pub fn spawn_player(
             transform: Transform::from_xyz(0.0, 0.0, 10.0),
             ..Default::default()
         })
+        .insert(GameState::MapView)
         .insert(Player::default());
 }

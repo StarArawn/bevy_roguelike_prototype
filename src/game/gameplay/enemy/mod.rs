@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use crate::game::GameState;
+
 pub mod spawner;
 
 #[derive(Default)]
@@ -20,5 +22,6 @@ pub fn spawn_map_enemy(
             transform: Transform::from_xyz(position.x, position.y, 12.0),
             ..Default::default()
         })
+        .insert(GameState::MapView)
         .insert(Enemy::default());
 }

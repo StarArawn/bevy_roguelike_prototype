@@ -37,17 +37,30 @@ impl Plugin for GamePlugin {
             )
             .add_system_set(
                 // Gameplay update
-                SystemSet::on_update(GameState::Playing)
+                SystemSet::on_update(GameState::MapView)
                     .label("gameplay_update")
                     .with_system(gameplay::player::movement.system())                   
             )
             .add_system_set(
                 // Realtime update
                 // Used for non-gameplay items that should update every frame.
-                SystemSet::on_update(GameState::Playing)
+                SystemSet::on_update(GameState::MapView)
                     .label("realtime_update")
                     .with_system(camera::camera_movement.system())
                     .with_system(gameplay::enemy::spawner::tick.system())
+            )
+            .add_system_set(
+                SystemSet::on_update(GameState::BattleView)
+                    .with_system(camera::camera_movement.system())
+            )
+            // Update visibilty between states.
+            .add_system_set(
+                SystemSet::on_enter(GameState::BattleView)
+                    .with_system(game_state::update_visibility_for_state.system())
+            )
+            .add_system_set(
+                SystemSet::on_enter(GameState::MapView)
+                    .with_system(game_state::update_visibility_for_state.system())
             )
             .add_system_to_stage(
                 CoreStage::PostUpdate,

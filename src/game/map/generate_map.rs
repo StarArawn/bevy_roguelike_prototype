@@ -170,7 +170,6 @@ pub fn generate_map(
     mut tilemap_query: Query<&mut Tilemap>
 ) {
     for mut tilemap in tilemap_query.iter_mut() {
-
         // Generate a seed for the map
         let mut random = thread_rng();
         let seed: u32 = random.gen();
@@ -244,7 +243,7 @@ pub fn generate_map(
             }
         }
 
-        game_state.set(GameState::Playing).unwrap();
+        game_state.set(GameState::MapView).unwrap();
     }
 
 }

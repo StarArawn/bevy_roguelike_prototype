@@ -1,5 +1,7 @@
 use bevy::prelude::*;
-use rand::{Rng, prelude::ThreadRng, thread_rng};
+use rand::{Rng, thread_rng};
+
+use crate::game::GameState;
 
 use super::spawn_map_enemy;
 
@@ -26,6 +28,7 @@ pub fn spawn(
             transform: Transform::from_xyz(position.x, position.y, 10.0),
             ..Default::default()
         })
+        .insert(GameState::MapView)
         .insert(Spawner {
             wait_time: 10.0,
             last_time: 0.0,
