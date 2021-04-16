@@ -8,7 +8,7 @@ A rogue-like game built in bevy and rust.
 
 ### Credits:
 - `Toen's Medieval Strategy Sprite Pack` - Created by Andre Mari Coppola (http://toen.itch.io/toens-medieval-strategy)
-- `GLACIAL MOUNTAINS: PARALLAX BACKGROUND` - GLACIAL MOUNTAINS: PARALLAX BACKGROUND (license: http://creativecommons.org/licenses/by/4.0/)
+- `GLACIAL MOUNTAINS: PARALLAX BACKGROUND` - by Vicente Nitti (@vnitti) (license: http://creativecommons.org/licenses/by/4.0/)
 
 ### Twitch Stream/Youtube playlist:
 Twitch streams can be found here:
