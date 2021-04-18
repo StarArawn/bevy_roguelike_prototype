@@ -12,6 +12,7 @@ pub struct CustomOrthographicProjection {
     pub scaling_mode: ScalingMode,
     pub scale: f32,
     pub depth_calculation: DepthCalculation,
+    pub size: Option<Vec2>,
 }
 
 impl CameraProjection for CustomOrthographicProjection {
@@ -27,6 +28,8 @@ impl CameraProjection for CustomOrthographicProjection {
     }
 
     fn update(&mut self, width: f32, height: f32) {
+        let (width, height) = if self.size.is_some() { (self.size.unwrap().x, self.size.unwrap().y) } else { (width, height) };
+
         match (&self.scaling_mode, &self.window_origin) {
             (ScalingMode::WindowSize, WindowOrigin::Center) => {
                 let half_width = width / 2.0;
@@ -92,6 +95,7 @@ impl Default for CustomOrthographicProjection {
             scaling_mode: ScalingMode::WindowSize,
             scale: 1.0,
             depth_calculation: DepthCalculation::Distance,
+            size: None,
         }
     }
 }
@@ -110,6 +114,9 @@ pub struct CustomOrthographicCameraBundle {
 
 impl CustomOrthographicCameraBundle {
     pub fn new_2d() -> Self {
+        Self::new_2d_with_size(None)
+    }
+    pub fn new_2d_with_size(size: Option<Vec2>) -> Self {
         // we want 0 to be "closest" and +far to be "farthest" in 2d, so we offset
         // the camera's translation by far and use a right handed coordinate system
         let far = 1000.0;
@@ -121,6 +128,7 @@ impl CustomOrthographicCameraBundle {
             orthographic_projection: CustomOrthographicProjection {
                 far,
                 depth_calculation: DepthCalculation::ZDifference,
+                size,
                 ..Default::default()
             },
             visible_entities: Default::default(),

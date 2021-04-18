@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::game::GameState;
+use crate::game::{GameState, camera::CustomOrthographicCameraBundle};
 
 pub enum BattleLocation {
     Mountains,
@@ -30,4 +30,8 @@ pub fn spawn_battle_screen(
             ..Default::default()
         })
         .insert(GameState::BattleView);
+
+    commands.spawn()
+        .insert_bundle(CustomOrthographicCameraBundle::new_2d_with_size(Some(Vec2::new(1920.0, 1080.0))))
+        .insert(GameState::BattleView);    
 }

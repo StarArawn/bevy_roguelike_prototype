@@ -57,10 +57,12 @@ impl Plugin for GamePlugin {
             .add_system_set(
                 SystemSet::on_enter(GameState::BattleView)
                     .with_system(game_state::update_visibility_for_state.system())
+                    .with_system(game_state::update_camera_for_state.system())
             )
             .add_system_set(
                 SystemSet::on_enter(GameState::MapView)
                     .with_system(game_state::update_visibility_for_state.system())
+                    .with_system(game_state::update_camera_for_state.system())
             )
             .add_system_to_stage(
                 CoreStage::PostUpdate,
