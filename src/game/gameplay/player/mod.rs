@@ -22,7 +22,9 @@ pub fn spawn_player(
         material: map_player_sprite_material,
         transform: Transform::from_xyz(0.0, 0.0, 10.0),
         ..Default::default()
-    });
+    })
+    .insert(Player::default());
+
 }
 
 
