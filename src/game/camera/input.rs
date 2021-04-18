@@ -34,6 +34,7 @@ pub fn camera_movement(
     mut game_state: ResMut<State<GameState>>,
     mut keyboard_input: ResMut<Input<KeyCode>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
+    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
     mut query: Query<(&mut Camera, &mut Transform, &mut CustomOrthographicProjection)>,
     time: Res<Time>,
     windows: Res<Windows>,
@@ -41,7 +42,7 @@ pub fn camera_movement(
     if keyboard_input.just_pressed(KeyCode::P) {
         if *game_state.current() == GameState::MapView {
             game_state.set(GameState::BattleView).unwrap();
-            battle::spawn_battle_screen(battle::BattleLocation::Mountains, &mut commands, &asset_server, &mut materials);
+            battle::spawn_battle_screen(battle::BattleLocation::Mountains, &mut commands, &asset_server, &mut materials, &mut texture_atlases);
         } else if *game_state.current() == GameState::BattleView {
             game_state.set(GameState::MapView).unwrap();
         }

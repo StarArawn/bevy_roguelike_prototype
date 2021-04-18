@@ -22,7 +22,7 @@ pub fn update_visibility_for_state(
         if game_state.current() == target_game_state {
             visible.is_visible = true;
         } else {
-            visible.is_visible = false;
+            visible.is_visible = true;
         }
     }
 }

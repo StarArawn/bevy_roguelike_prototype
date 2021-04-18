@@ -1,5 +1,6 @@
 use bevy::{prelude::*, render::RenderSystem};
 
+mod animation;
 mod camera;
 mod game_state;
 mod gameplay;
@@ -8,7 +9,7 @@ mod map;
 mod timing;
 
 pub use game_state::GameState;
-use self::camera::CustomOrthographicProjection;
+use self::{camera::CustomOrthographicProjection, gameplay::battle};
 
 pub struct GamePlugin;
 
@@ -19,6 +20,7 @@ impl Plugin for GamePlugin {
             .init_resource::<timing::Timing>()
             .register_type::<CustomOrthographicProjection>()
             .add_system(timing::update.system())
+            .add_system(animation::animate_sprite_system.system())
             .add_system_set(
                 SystemSet::on_update(GameState::Loading)
                     .with_system(loading::loading.system())
@@ -49,9 +51,14 @@ impl Plugin for GamePlugin {
                     .with_system(camera::camera_movement.system())
                     .with_system(gameplay::enemy::spawner::tick.system())
             )
+            // Battle View
             .add_system_set(
                 SystemSet::on_update(GameState::BattleView)
                     .with_system(camera::camera_movement.system())
+            )
+            .add_system_set(
+                SystemSet::on_exit(GameState::BattleView)
+                    .with_system(battle::clear_battle_screen.system())
             )
             // Update visibilty between states.
             .add_system_set(
