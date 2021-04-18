@@ -1,4 +1,12 @@
-use bevy::{prelude::*, render::{camera::{Camera, CameraProjection, DepthCalculation, ScalingMode, VisibleEntities, WindowOrigin}, render_graph::base}};
+use bevy::{
+    prelude::*,
+    render::{
+        camera::{
+            Camera, CameraProjection, DepthCalculation, ScalingMode, VisibleEntities, WindowOrigin,
+        },
+        render_graph::base,
+    },
+};
 #[derive(Debug, Clone, Reflect)]
 #[reflect(Component)]
 pub struct CustomOrthographicProjection {
@@ -28,7 +36,11 @@ impl CameraProjection for CustomOrthographicProjection {
     }
 
     fn update(&mut self, width: f32, height: f32) {
-        let (width, height) = if self.size.is_some() { (self.size.unwrap().x, self.size.unwrap().y) } else { (width, height) };
+        let (width, height) = if self.size.is_some() {
+            (self.size.unwrap().x, self.size.unwrap().y)
+        } else {
+            (width, height)
+        };
 
         match (&self.scaling_mode, &self.window_origin) {
             (ScalingMode::WindowSize, WindowOrigin::Center) => {

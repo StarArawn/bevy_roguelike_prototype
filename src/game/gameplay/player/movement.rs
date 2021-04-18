@@ -1,5 +1,5 @@
-use bevy::prelude::*;
 use crate::game::{map::Map, timing::Timing};
+use bevy::prelude::*;
 
 use super::Player;
 
@@ -22,7 +22,11 @@ pub fn movement(
             }
 
             let current_road_position = map.road_path[player.current_position];
-            transform.translation = Vec3::new((current_road_position.0 as f32 * 16.0) + 8.0, (current_road_position.1 as f32 * 16.0) + 8.0, 10.0);
+            transform.translation = Vec3::new(
+                (current_road_position.0 as f32 * 16.0) + 8.0,
+                (current_road_position.1 as f32 * 16.0) + 8.0,
+                10.0,
+            );
         }
     }
 }

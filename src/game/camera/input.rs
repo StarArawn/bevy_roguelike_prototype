@@ -1,10 +1,10 @@
+use crate::game::{gameplay::battle, GameState};
+use bevy::render::camera::CameraProjection;
 use bevy::{
     // input::mouse::{MouseMotion, MouseWheel},
     prelude::*,
     render::camera::Camera,
 };
-use bevy::render::camera::CameraProjection;
-use crate::game::{GameState, gameplay::battle};
 
 use super::CustomOrthographicProjection;
 
@@ -14,8 +14,8 @@ pub struct KeyboardConf {
     pub left: Box<[KeyCode]>,
     pub right: Box<[KeyCode]>,
     pub move_sensitivity: f32,
-} 
- 
+}
+
 impl Default for KeyboardConf {
     fn default() -> Self {
         KeyboardConf {
@@ -35,14 +35,24 @@ pub fn camera_movement(
     mut keyboard_input: ResMut<Input<KeyCode>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
-    mut query: Query<(&mut Camera, &mut Transform, &mut CustomOrthographicProjection)>,
+    mut query: Query<(
+        &mut Camera,
+        &mut Transform,
+        &mut CustomOrthographicProjection,
+    )>,
     time: Res<Time>,
     windows: Res<Windows>,
 ) {
     if keyboard_input.just_pressed(KeyCode::P) {
         if *game_state.current() == GameState::MapView {
             game_state.set(GameState::BattleView).unwrap();
-            battle::spawn_battle_screen(battle::BattleLocation::Mountains, &mut commands, &asset_server, &mut materials, &mut texture_atlases);
+            battle::spawn_battle_screen(
+                battle::BattleLocation::Mountains,
+                &mut commands,
+                &asset_server,
+                &mut materials,
+                &mut texture_atlases,
+            );
         } else if *game_state.current() == GameState::BattleView {
             game_state.set(GameState::MapView).unwrap();
         }
@@ -83,7 +93,10 @@ pub fn camera_movement(
             projection.scale = scale;
         }
 
-        projection.update(windows.get_primary().unwrap().width(), windows.get_primary().unwrap().height());
+        projection.update(
+            windows.get_primary().unwrap().width(),
+            windows.get_primary().unwrap().height(),
+        );
         camera.projection_matrix = projection.get_projection_matrix();
         camera.depth_calculation = projection.depth_calculation();
 

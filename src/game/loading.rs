@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
-use super::{GameState, map::get_has_map_assets};
 use super::map::TilemapAtlasHandles;
+use super::{map::get_has_map_assets, GameState};
 
 // A system to determin if we have finished loading and should change states.
 pub fn loading(

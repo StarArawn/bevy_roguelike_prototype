@@ -1,16 +1,16 @@
 use bevy::prelude::*;
 
-mod map;
 mod generate_map;
-mod spawn_map_entity;
 mod get_has_map_assets;
+mod map;
+mod spawn_map_entity;
 
-pub use spawn_map_entity::TilemapAtlasHandles;
 pub use self::map::Map;
 pub use get_has_map_assets::get_has_map_assets;
+pub use spawn_map_entity::TilemapAtlasHandles;
 
-pub use spawn_map_entity::spawn_map_entity;
 pub use generate_map::generate_map;
+pub use spawn_map_entity::spawn_map_entity;
 
 pub fn setup(
     asset_server: Res<AssetServer>,
@@ -24,8 +24,7 @@ pub struct MapPlugin;
 
 impl Plugin for MapPlugin {
     fn build(&self, app: &mut AppBuilder) {
-        app
-            .init_resource::<TilemapAtlasHandles>()
+        app.init_resource::<TilemapAtlasHandles>()
             .init_resource::<Map>()
             .add_startup_system(setup.system());
     }

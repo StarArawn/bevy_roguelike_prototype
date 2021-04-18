@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use rand::{Rng, thread_rng};
+use rand::{thread_rng, Rng};
 
 use crate::game::GameState;
 
@@ -9,9 +9,9 @@ use super::spawn_map_enemy;
 pub struct Spawner {
     wait_time: f64, // How long until a enemy spawns
     last_time: f64, // The time since the last spawn
-    limit: u32, // The maximum enemy's that can spawn from this spawner.
-    current: u32, // The current count of spawned enemies.
-    range: f32, // How far away from the spawner an enemy can spawn.
+    limit: u32,     // The maximum enemy's that can spawn from this spawner.
+    current: u32,   // The current count of spawned enemies.
+    _range: f32,    // How far away from the spawner an enemy can spawn.
 }
 
 pub fn spawn(
@@ -34,7 +34,7 @@ pub fn spawn(
             last_time: 0.0,
             limit: 3,
             current: 0,
-            range: 2.0
+            _range: 2.0,
         });
 }
 
@@ -43,7 +43,7 @@ pub fn tick(
     asset_server: Res<AssetServer>,
     mut materials: ResMut<Assets<ColorMaterial>>,
     mut spawner_query: Query<(&Transform, &mut Spawner)>,
-    time: Res<Time>, 
+    time: Res<Time>,
 ) {
     let current_time = time.seconds_since_startup();
 
@@ -61,7 +61,12 @@ pub fn tick(
         let spawner_elapsed_time = current_time - spawner.last_time;
         if spawner_elapsed_time > spawner.wait_time && spawner.current < spawner.limit {
             let offset = spawn_pos[random.gen_range(0..4)];
-            spawn_map_enemy(&mut commands, &asset_server, &mut materials, Vec2::new(transform.translation.x, transform.translation.y) + offset);
+            spawn_map_enemy(
+                &mut commands,
+                &asset_server,
+                &mut materials,
+                Vec2::new(transform.translation.x, transform.translation.y) + offset,
+            );
             spawner.last_time = current_time;
             spawner.current += 1;
         }

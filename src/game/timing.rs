@@ -6,11 +6,7 @@ pub struct Timing {
     pub should_update: bool,
 }
 
-pub fn update(
-    time: Res<Time>, 
-    mut timing: ResMut<Timing>,
-) {
-
+pub fn update(time: Res<Time>, mut timing: ResMut<Timing>) {
     let current = time.seconds_since_startup();
     if (current - timing.last_time) > 0.500 {
         timing.last_time = current;

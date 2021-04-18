@@ -5,8 +5,7 @@ use crate::game::GameState;
 pub mod spawner;
 
 #[derive(Default)]
-pub struct Enemy {
-}
+pub struct Enemy {}
 
 pub fn spawn_map_enemy(
     commands: &mut Commands,

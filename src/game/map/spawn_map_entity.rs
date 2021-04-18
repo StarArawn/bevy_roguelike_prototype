@@ -1,7 +1,7 @@
-use bevy::{prelude::*};
+use bevy::prelude::*;
 use bevy_tilemap::prelude::*;
 
-use crate::game::{GameState, camera::CustomOrthographicCameraBundle};
+use crate::game::{camera::CustomOrthographicCameraBundle, GameState};
 
 #[derive(Default, Clone)]
 pub struct TilemapAtlasHandles {
@@ -48,7 +48,7 @@ pub fn spawn_map_entity(
         .texture_atlas(atlas_handle)
         .finish()
         .unwrap();
-        
+
     let tilemap_components = TilemapBundle {
         tilemap,
         visible: Visible {

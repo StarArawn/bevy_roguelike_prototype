@@ -1,10 +1,10 @@
+use super::Map;
+use crate::game::{gameplay::enemy::spawner, GameState};
+use bevy::prelude::*;
 use bevy_tilemap::prelude::*;
-use bevy::{prelude::*};
 use noise::{Fbm, MultiFractal, NoiseFn, Seedable};
 use pathfinding::prelude::{absdiff, astar};
-use rand::{Rng, prelude::ThreadRng, thread_rng};
-use crate::game::{GameState, gameplay::enemy::spawner};
-use super::Map;
+use rand::{prelude::ThreadRng, thread_rng, Rng};
 
 fn get_island_shape(x: f64, y: f64) -> f64 {
     let a = 1.0;
@@ -33,7 +33,8 @@ fn generate_road(tilemap: &mut Tilemap, random: &mut ThreadRng) -> Vec<Vec2> {
 
     let mut road_points = Vec::new();
     for angle in angles {
-        let current_direction = Vec2::new(angle.to_radians().cos(), angle.to_radians().sin()).normalize();
+        let current_direction =
+            Vec2::new(angle.to_radians().cos(), angle.to_radians().sin()).normalize();
 
         for ray_index in 2..1000 {
             let check_position: Vec2 = current_direction * (ray_index as f32);
@@ -49,14 +50,14 @@ fn generate_road(tilemap: &mut Tilemap, random: &mut ThreadRng) -> Vec<Vec2> {
                         road_points.push(road_position);
                         break;
                     }
-                },
+                }
                 None => {
                     break;
                 }
             }
         }
     }
-    
+
     for road_point in road_points.iter() {
         let tile = Tile {
             point: (road_point.x as i32, road_point.y as i32),
@@ -89,7 +90,7 @@ pub fn find_neighbors(pos: (i32, i32), tilemap: &mut Tilemap) -> Vec<((i32, i32)
     let neighbor_south_east = tilemap.get_tile((pos.0 + 1, pos.1 - 1), 0).unwrap().clone();
     // South West
     let neighbor_south_west = tilemap.get_tile((pos.0 - 1, pos.1 - 1), 0).unwrap().clone();
-    
+
     let mut neighbors = Vec::new();
 
     if neighbor_north.index != 19 {
@@ -126,15 +127,16 @@ pub fn find_road_path(road_points: &Vec<Vec2>, tilemap: &mut Tilemap) -> Vec<(i3
 
     let mut starting_point = (road_points[0].x as i32, road_points[0].y as i32);
     for road_point_index in 1..road_points.len() {
-        let goal = (road_points[road_point_index].x as i32, road_points[road_point_index].y as i32);
+        let goal = (
+            road_points[road_point_index].x as i32,
+            road_points[road_point_index].y as i32,
+        );
         // Do pathfinding
         let path = astar(
             &starting_point,
-            |&(x, y)| {
-                find_neighbors((x, y), tilemap)
-            },
+            |&(x, y)| find_neighbors((x, y), tilemap),
             |&(x, y)| absdiff(x, goal.0) + absdiff(y, goal.1),
-            |&p| p == goal
+            |&p| p == goal,
         );
 
         road_path.extend(path.unwrap().0);
@@ -143,7 +145,6 @@ pub fn find_road_path(road_points: &Vec<Vec2>, tilemap: &mut Tilemap) -> Vec<(i3
     }
 
     for road_point in road_path.iter() {
-
         let has_no_tile = tilemap.get_tile(*road_point, 1).is_none();
 
         if has_no_tile {
@@ -167,14 +168,14 @@ pub fn generate_map(
     mut materials: ResMut<Assets<ColorMaterial>>,
     mut game_state: ResMut<State<GameState>>,
     mut map: ResMut<Map>,
-    mut tilemap_query: Query<&mut Tilemap>
+    mut tilemap_query: Query<&mut Tilemap>,
 ) {
     for mut tilemap in tilemap_query.iter_mut() {
         // Generate a seed for the map
         let mut random = thread_rng();
         let seed: u32 = random.gen();
 
-        // Create fbm noise 
+        // Create fbm noise
         let mut fbm = Fbm::new();
         fbm = fbm.set_seed(seed);
         fbm = fbm.set_frequency(0.2);
@@ -202,7 +203,7 @@ pub fn generate_map(
                 let noise_value = fbm.get([high_x / 15.0, high_y / 15.0]) - (1.0 - mask);
 
                 // Create Tile
-                let mut  tile = Tile {
+                let mut tile = Tile {
                     point: (x, y),
                     sprite_index: 19, // Water
                     ..Default::default()
@@ -210,7 +211,7 @@ pub fn generate_map(
 
                 if noise_value > 0.0 {
                     if noise_value > 0.9 {
-                        tile.sprite_index = 23; // Snow   
+                        tile.sprite_index = 23; // Snow
                     } else if noise_value > 0.7 {
                         tile.sprite_index = 22; // Rock 2
                     } else if noise_value > 0.6 {
@@ -235,7 +236,12 @@ pub fn generate_map(
 
         let random_road_index = random.gen_range(0..map.road_path.len() - 1);
         let road_point = map.road_path[random_road_index];
-        spawner::spawn(&mut commands, &asset_server, &mut materials, Vec2::new(road_point.0 as f32 * 16.0, road_point.1 as f32 * 16.0) + Vec2::new(8.0, 8.0));
+        spawner::spawn(
+            &mut commands,
+            &asset_server,
+            &mut materials,
+            Vec2::new(road_point.0 as f32 * 16.0, road_point.1 as f32 * 16.0) + Vec2::new(8.0, 8.0),
+        );
 
         for x in -half_map_width..half_map_width {
             for y in -half_map_height..half_map_height {
@@ -245,5 +251,4 @@ pub fn generate_map(
 
         game_state.set(GameState::MapView).unwrap();
     }
-
 }

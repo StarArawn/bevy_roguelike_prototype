@@ -1,4 +1,10 @@
-use bevy::{prelude::*, render::{camera::{ActiveCameras, Camera}, render_graph::base}};
+use bevy::{
+    prelude::*,
+    render::{
+        camera::{ActiveCameras, Camera},
+        render_graph::base,
+    },
+};
 
 #[derive(Clone, Eq, PartialEq, Debug, Hash)]
 pub enum GameState {
