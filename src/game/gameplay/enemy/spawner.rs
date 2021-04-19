@@ -2,8 +2,7 @@ use bevy::prelude::*;
 use rand::{thread_rng, Rng};
 
 use crate::game::GameState;
-
-use super::spawn_map_enemy;
+use super::spawn_enemy;
 
 #[derive(Default)]
 pub struct Spawner {
@@ -42,6 +41,7 @@ pub fn tick(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut materials: ResMut<Assets<ColorMaterial>>,
+    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
     mut spawner_query: Query<(&Transform, &mut Spawner)>,
     time: Res<Time>,
 ) {
@@ -61,10 +61,11 @@ pub fn tick(
         let spawner_elapsed_time = current_time - spawner.last_time;
         if spawner_elapsed_time > spawner.wait_time && spawner.current < spawner.limit {
             let offset = spawn_pos[random.gen_range(0..4)];
-            spawn_map_enemy(
+            spawn_enemy(
                 &mut commands,
                 &asset_server,
                 &mut materials,
+                &mut texture_atlases,
                 Vec2::new(transform.translation.x, transform.translation.y) + offset,
             );
             spawner.last_time = current_time;

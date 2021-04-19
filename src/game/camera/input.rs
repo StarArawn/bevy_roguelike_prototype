@@ -1,4 +1,4 @@
-use crate::game::{gameplay::battle, GameState};
+use crate::game::{gameplay::scenes, GameState};
 use bevy::render::camera::CameraProjection;
 use bevy::{
     // input::mouse::{MouseMotion, MouseWheel},
@@ -46,8 +46,8 @@ pub fn camera_movement(
     if keyboard_input.just_pressed(KeyCode::P) {
         if *game_state.current() == GameState::MapView {
             game_state.set(GameState::BattleView).unwrap();
-            battle::spawn_battle_screen(
-                battle::BattleLocation::Mountains,
+            scenes::battle::spawn(
+                scenes::battle::BattleLocation::Mountains,
                 &mut commands,
                 &asset_server,
                 &mut materials,

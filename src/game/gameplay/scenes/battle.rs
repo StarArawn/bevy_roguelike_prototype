@@ -1,8 +1,6 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, render::camera::RenderLayers};
 
-use crate::game::camera::CustomOrthographicCameraBundle;
-
-use super::player;
+use crate::game::{camera::CustomOrthographicCameraBundle, gameplay::player};
 
 pub enum BattleLocation {
     Mountains,
@@ -18,7 +16,7 @@ pub fn get_battle_location_texture(battle_location: BattleLocation) -> &'static 
     }
 }
 
-pub fn spawn_battle_screen(
+pub fn spawn(
     battle_location: BattleLocation,
     commands: &mut Commands,
     asset_server: &Res<AssetServer>,
@@ -36,13 +34,14 @@ pub fn spawn_battle_screen(
                 material: background_sprite,
                 transform: Transform::from_xyz(0.0, 0.0, 0.0),
                 ..Default::default()
-            });
+            }).insert(RenderLayers::layer(1));
 
             parent
                 .spawn()
                 .insert_bundle(CustomOrthographicCameraBundle::new_2d_with_size(Some(
                     Vec2::new(1920.0, 1080.0),
-                )));
+                )))
+                .insert(RenderLayers::layer(1));
 
             player::spawn_player_battleview(parent, asset_server, texture_atlases);
         })

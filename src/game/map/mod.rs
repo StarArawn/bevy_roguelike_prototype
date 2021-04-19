@@ -16,7 +16,7 @@ pub fn setup(
     asset_server: Res<AssetServer>,
     mut tilemap_atlas_handles: ResMut<TilemapAtlasHandles>,
 ) {
-    asset_server.load_folder("textures").unwrap();
+    // asset_server.load_folder("textures").unwrap();
     tilemap_atlas_handles.handles = asset_server.load_folder("textures/map").unwrap();
 }
 

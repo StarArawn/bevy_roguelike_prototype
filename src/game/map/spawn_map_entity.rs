@@ -61,10 +61,6 @@ pub fn spawn_map_entity(
 
     commands
         .spawn()
-        .insert_bundle(CustomOrthographicCameraBundle::new_2d())
-        .insert(GameState::MapView);
-    commands
-        .spawn()
         .insert(GameState::MapView)
         .insert_bundle(tilemap_components);
 }

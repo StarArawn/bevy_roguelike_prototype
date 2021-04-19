@@ -1,10 +1,4 @@
-use bevy::{
-    prelude::*,
-    render::{
-        camera::{ActiveCameras, Camera},
-        render_graph::base,
-    },
-};
+use bevy::{ecs::component::Component, prelude::*};
 
 #[derive(Clone, Eq, PartialEq, Debug, Hash)]
 pub enum GameState {
@@ -20,33 +14,44 @@ impl Default for GameState {
     }
 }
 
-pub fn update_visibility_for_state(
-    game_state: Res<State<GameState>>,
-    mut query: Query<(&mut Visible, &GameState)>,
-) {
-    for (mut visible, target_game_state) in query.iter_mut() {
-        if game_state.current() == target_game_state {
-            visible.is_visible = true;
-        } else {
-            visible.is_visible = true;
-        }
-    }
-}
+// pub trait EntityRenderingState : Component {
+//     fn spawn(
+//         &mut self,
+//         game_state: &GameState,
+//         commands: &mut Commands,
+//         asset_server: &Res<AssetServer>,
+//         materials: &mut ResMut<Assets<ColorMaterial>>,
+//         texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
+//     );
 
-pub fn update_camera_for_state(
-    mut active_cameras: ResMut<ActiveCameras>,
-    game_state: Res<State<GameState>>,
-    mut query: Query<(&mut Camera, &GameState)>,
-) {
-    for (mut camera, target_game_state) in query.iter_mut() {
-        if game_state.current() == target_game_state {
-            camera.name = Some(base::camera::CAMERA_2D.to_string());
-        } else {
-            camera.name = None;
-        }
-    }
+//     fn entity(&self) -> Entity where Self: 'static;
+// }
 
-    for active_camera in active_cameras.iter_mut() {
-        active_camera.entity = None;
-    }
-}
+// pub fn spawn_rendering_entities(
+//     mut commands: Commands,
+//     game_state: Res<State<GameState>>,
+//     asset_server: Res<AssetServer>,
+//     mut materials: ResMut<Assets<ColorMaterial>>,
+//     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
+//     mut query: Query<&mut Box<dyn EntityRenderingState>>,
+// ) {
+//     if game_state.is_changed() {
+//         dbg!("Spawned the rendering entities");
+//         for mut game_state_rendering in query.iter_mut() {
+//             game_state_rendering.spawn(game_state.current(), &mut commands, &asset_server, &mut materials, &mut texture_atlases);
+//         }
+//     }
+// }
+
+// pub fn destroy_rendering_entities(
+//     mut commands: Commands,
+//     game_state: Res<State<GameState>>,
+//     mut query: Query<&Box<dyn EntityRenderingState>>,
+// ) {
+//     if game_state.is_changed() {
+//         dbg!("Destroyed the rendering entities");
+//         for game_state_rendering in query.iter_mut() {
+//             commands.entity(game_state_rendering.entity()).despawn_recursive();
+//         }
+//     }
+// }

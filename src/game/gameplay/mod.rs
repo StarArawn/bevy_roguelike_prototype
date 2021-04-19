@@ -1,3 +1,3 @@
-pub mod battle;
+pub mod scenes;
 pub mod enemy;
 pub mod player;

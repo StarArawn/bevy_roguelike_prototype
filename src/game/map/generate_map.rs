@@ -191,9 +191,6 @@ pub fn generate_map(
         let half_actual_width = actual_width / 2;
         let half_actual_height = actual_height / 2;
 
-        let half_map_width = map_width / 2;
-        let half_map_height = map_height / 2;
-
         let mut tiles = Vec::new();
         for x in -half_actual_width..half_actual_width {
             for y in -half_actual_height..half_actual_height {
@@ -242,13 +239,6 @@ pub fn generate_map(
             &mut materials,
             Vec2::new(road_point.0 as f32 * 16.0, road_point.1 as f32 * 16.0) + Vec2::new(8.0, 8.0),
         );
-
-        for x in -half_map_width..half_map_width {
-            for y in -half_map_height..half_map_height {
-                tilemap.spawn_chunk((x, y)).unwrap();
-            }
-        }
-
-        game_state.set(GameState::MapView).unwrap();
     }
+    game_state.set(GameState::MapView).unwrap();
 }

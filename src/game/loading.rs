@@ -1,4 +1,5 @@
-use bevy::prelude::*;
+use bevy::{asset::LoadState, prelude::*};
+use bevy_tilemap::Tile;
 
 use super::map::TilemapAtlasHandles;
 use super::{map::get_has_map_assets, GameState};
@@ -8,8 +9,11 @@ pub fn loading(
     asset_server: Res<AssetServer>,
     mut game_state: ResMut<State<GameState>>,
     tilemap_atlas_handles: Res<TilemapAtlasHandles>,
+    textures: Res<Assets<Texture>>,
 ) {
-    if get_has_map_assets(asset_server, tilemap_atlas_handles) {
+    if asset_server.get_group_load_state(textures.iter().map(|(handle_id, _)| handle_id)) == LoadState::Loaded &&
+        get_has_map_assets(asset_server, tilemap_atlas_handles)
+    {
         game_state.set(GameState::Generating).unwrap();
     }
 }

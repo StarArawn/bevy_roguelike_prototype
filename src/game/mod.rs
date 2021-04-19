@@ -8,7 +8,7 @@ mod loading;
 mod map;
 mod timing;
 
-use self::{camera::CustomOrthographicProjection, gameplay::battle};
+use self::{camera::CustomOrthographicProjection, gameplay::scenes};
 pub use game_state::GameState;
 
 pub struct GamePlugin;
@@ -16,7 +16,9 @@ pub struct GamePlugin;
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut AppBuilder) {
         app.add_state(GameState::default())
+            .add_plugin(map::MapPlugin)
             .init_resource::<timing::Timing>()
+            .init_resource::<camera::CurrentCamera>()
             .register_type::<CustomOrthographicProjection>()
             .add_system(timing::update.system())
             .add_system(animation::animate_sprite_system.system())
@@ -34,6 +36,14 @@ impl Plugin for GamePlugin {
                     .after("spawn_map")
                     .with_system(gameplay::player::spawn_player.system())
                     .after("spawn_map"),
+            )
+            .add_system_set(
+                SystemSet::on_enter(GameState::MapView)
+                .with_system(gameplay::scenes::map_view::spawn.system()),
+            )
+            .add_system_set(
+                SystemSet::on_exit(GameState::MapView)
+                .with_system(gameplay::scenes::map_view::destroy.system()),
             )
             .add_system_set(
                 // Gameplay update
@@ -56,25 +66,13 @@ impl Plugin for GamePlugin {
             )
             .add_system_set(
                 SystemSet::on_exit(GameState::BattleView)
-                    .with_system(battle::clear_battle_screen.system()),
-            )
-            // Update visibilty between states.
-            .add_system_set(
-                SystemSet::on_enter(GameState::BattleView)
-                    .with_system(game_state::update_visibility_for_state.system())
-                    .with_system(game_state::update_camera_for_state.system()),
-            )
-            .add_system_set(
-                SystemSet::on_enter(GameState::MapView)
-                    .with_system(game_state::update_visibility_for_state.system())
-                    .with_system(game_state::update_camera_for_state.system()),
+                    .with_system(scenes::battle::clear_battle_screen.system()),
             )
             .add_system_to_stage(
                 CoreStage::PostUpdate,
                 bevy::render::camera::camera_system::<CustomOrthographicProjection>
                     .system()
                     .before(RenderSystem::VisibleEntities),
-            )
-            .add_plugin(map::MapPlugin);
+            );
     }
 }
