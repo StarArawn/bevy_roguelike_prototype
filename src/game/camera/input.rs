@@ -1,7 +1,5 @@
-use crate::game::{gameplay::scenes, GameState};
-use bevy::render::camera::CameraProjection;
+use crate::game::GameState;
 use bevy::{
-    // input::mouse::{MouseMotion, MouseWheel},
     prelude::*,
     render::camera::Camera,
 };
@@ -29,29 +27,18 @@ impl Default for KeyboardConf {
 }
 
 pub fn camera_movement(
-    asset_server: Res<AssetServer>,
-    mut commands: Commands,
     mut game_state: ResMut<State<GameState>>,
     mut keyboard_input: ResMut<Input<KeyCode>>,
-    mut materials: ResMut<Assets<ColorMaterial>>,
     mut query: Query<(
         &mut Camera,
         &mut Transform,
         &mut CustomOrthographicProjection,
     )>,
     time: Res<Time>,
-    windows: Res<Windows>,
+    _windows: Res<Windows>,
 ) {
     if keyboard_input.just_pressed(KeyCode::P) {
-        if *game_state.current() == GameState::MapView {
-            game_state.set(GameState::BattleView).unwrap();
-            scenes::battle::spawn(
-                scenes::battle::BattleLocation::Mountains,
-                &mut commands,
-                &asset_server,
-                &mut materials,
-            );
-        } else if *game_state.current() == GameState::BattleView {
+        if *game_state.current() == GameState::BattleView {
             game_state.set(GameState::MapView).unwrap();
         }
         keyboard_input.update();
@@ -61,7 +48,7 @@ pub fn camera_movement(
         return;
     }
 
-    for (mut camera, mut transform, mut projection) in query.iter_mut() {
+    for (mut _camera, mut transform, mut projection) in query.iter_mut() {
         let mut direction = Vec3::ZERO;
         let scale = projection.scale;
 
@@ -91,12 +78,7 @@ pub fn camera_movement(
             projection.scale = scale;
         }
 
-        projection.update(
-            windows.get_primary().unwrap().width(),
-            windows.get_primary().unwrap().height(),
-        );
-        camera.projection_matrix = projection.get_projection_matrix();
-        camera.depth_calculation = projection.depth_calculation();
+
 
         transform.translation += time.delta_seconds() * direction * 1000.;
     }

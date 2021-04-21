@@ -20,8 +20,10 @@ impl Plugin for GamePlugin {
             .init_resource::<timing::Timing>()
             .init_resource::<camera::CurrentCamera>()
             .register_type::<CustomOrthographicProjection>()
+            .add_event::<scenes::battle::BattleEvent>()
             .add_system(timing::update.system())
             .add_system(animation::animate_sprite_system.system())
+            .add_system(scenes::battle::handle_battle_events.system())
             .add_system_set(
                 SystemSet::on_update(GameState::Loading).with_system(loading::loading.system()),
             )
@@ -39,24 +41,26 @@ impl Plugin for GamePlugin {
             )
             .add_system_set(
                 SystemSet::on_enter(GameState::MapView)
-                .with_system(gameplay::scenes::map_view::spawn.system()),
+                    .with_system(gameplay::scenes::map_view::spawn.system()),
             )
             .add_system_set(
                 SystemSet::on_exit(GameState::MapView)
-                .with_system(gameplay::scenes::map_view::destroy.system()),
+                    .with_system(gameplay::scenes::map_view::destroy.system()),
             )
             .add_system_set(
                 // Gameplay update
                 SystemSet::on_update(GameState::MapView)
                     .label("gameplay_update")
-                    .with_system(gameplay::player::movement.system()),
+                    .with_system(gameplay::camera::movement.system())
+                    .with_system(gameplay::player::movement.system())
+                    .with_system(gameplay::player::collision::check.system())
             )
             .add_system_set(
                 // Realtime update
                 // Used for non-gameplay items that should update every frame.
                 SystemSet::on_update(GameState::MapView)
                     .label("realtime_update")
-                    .with_system(camera::camera_movement.system())
+                    // .with_system(camera::camera_movement.system())
                     .with_system(gameplay::enemy::spawner::tick.system()),
             )
             // Battle View

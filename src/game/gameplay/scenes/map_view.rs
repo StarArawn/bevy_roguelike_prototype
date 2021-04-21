@@ -1,7 +1,7 @@
 use bevy::{prelude::*, render::camera::RenderLayers};
 use bevy_tilemap::prelude::*;
 
-use crate::game::{camera::{CurrentCamera, CustomOrthographicCameraBundle}};
+use crate::game::{camera::{CameraData, CurrentCamera, CustomOrthographicCameraBundle}};
 
 pub fn spawn(
     mut commands: Commands,
@@ -11,6 +11,7 @@ pub fn spawn(
     let camera_entity = commands
         .spawn()
         .insert_bundle(CustomOrthographicCameraBundle::new_2d())
+        .insert(CameraData::default())
         .insert(RenderLayers::layer(0))
         .id();
 

@@ -15,7 +15,7 @@ pub fn spawn_enemy(
     commands
         .spawn()
         .insert(GlobalTransform::default())
-        .insert(Transform::from_xyz(position.x, position.y, 12.0))
+        .insert(Transform::from_xyz(position.x, position.y, 11.0))
         .insert(Enemy::default())
         .with_children(|child_builder| {
             let texture_handle: Handle<Texture> = asset_server.load("textures/spider_sprite.png");
