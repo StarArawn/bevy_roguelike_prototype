@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_tilemap::prelude::*;
 
-use crate::game::{camera::CustomOrthographicCameraBundle, GameState};
+use crate::game::{GameState};
 
 #[derive(Default, Clone)]
 pub struct TilemapAtlasHandles {

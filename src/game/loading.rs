@@ -1,6 +1,4 @@
 use bevy::{asset::LoadState, prelude::*};
-use bevy_tilemap::Tile;
-
 use super::map::TilemapAtlasHandles;
 use super::{map::get_has_map_assets, GameState};
 

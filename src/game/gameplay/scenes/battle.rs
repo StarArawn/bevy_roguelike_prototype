@@ -1,6 +1,6 @@
 use bevy::{prelude::*, render::camera::RenderLayers};
 
-use crate::game::{camera::CustomOrthographicCameraBundle, gameplay::player};
+use crate::game::{camera::CustomOrthographicCameraBundle};
 
 pub enum BattleLocation {
     Mountains,
@@ -21,7 +21,6 @@ pub fn spawn(
     commands: &mut Commands,
     asset_server: &Res<AssetServer>,
     materials: &mut ResMut<Assets<ColorMaterial>>,
-    texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
 ) {
     let texture_handle: Handle<Texture> =
         asset_server.load(get_battle_location_texture(battle_location));
@@ -42,8 +41,6 @@ pub fn spawn(
                     Vec2::new(1920.0, 1080.0),
                 )))
                 .insert(RenderLayers::layer(1));
-
-            player::spawn_player_battleview(parent, asset_server, texture_atlases);
         })
         .id();
 

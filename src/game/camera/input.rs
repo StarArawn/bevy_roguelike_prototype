@@ -34,7 +34,6 @@ pub fn camera_movement(
     mut game_state: ResMut<State<GameState>>,
     mut keyboard_input: ResMut<Input<KeyCode>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
-    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
     mut query: Query<(
         &mut Camera,
         &mut Transform,
@@ -51,7 +50,6 @@ pub fn camera_movement(
                 &mut commands,
                 &asset_server,
                 &mut materials,
-                &mut texture_atlases,
             );
         } else if *game_state.current() == GameState::BattleView {
             game_state.set(GameState::MapView).unwrap();
