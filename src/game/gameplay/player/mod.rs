@@ -7,6 +7,8 @@ pub use player::Player;
 
 pub use movement::movement;
 
+use super::{attributes::Health, modifiers::Poison};
+
 #[derive(Default)]
 pub struct PlayerSprite {
     // Current index of the road path position that the player is traveling to.
@@ -20,7 +22,8 @@ pub fn spawn_player(
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
     commands.spawn()
-        .insert(Player::default());
+        .insert(Player::default())
+        .insert(Health::new(100.0));
 
     let map_player_texture_handle = asset_server.load("textures/player_sprite.png");
     let map_player_sprite_material = materials.add(map_player_texture_handle.into());

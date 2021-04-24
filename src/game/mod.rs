@@ -72,6 +72,7 @@ impl Plugin for GamePlugin {
                 SystemSet::on_exit(GameState::BattleView)
                     .with_system(scenes::battle::clear_battle_screen.system()),
             )
+            .add_system(gameplay::attributes::update_health.system())
             .add_system_to_stage(
                 CoreStage::PostUpdate,
                 bevy::render::camera::camera_system::<CustomOrthographicProjection>
