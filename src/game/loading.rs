@@ -9,6 +9,8 @@ pub fn loading(
     tilemap_atlas_handles: Res<TilemapAtlasHandles>,
     textures: Res<Assets<Texture>>,
 ) {
+    asset_server.load::<Font, &'static str>("FiraMono-Medium.ttf");
+
     if asset_server.get_group_load_state(textures.iter().map(|(handle_id, _)| handle_id)) == LoadState::Loaded &&
         get_has_map_assets(asset_server, tilemap_atlas_handles)
     {

@@ -1,5 +1,7 @@
 use bevy::{prelude::*, render::camera::RenderLayers};
 
+use crate::game::helpers::z_index;
+
 use super::attributes::*;
 
 pub mod spawner;
@@ -51,7 +53,7 @@ pub fn create_battle_enemy(
     // Battle screen
     let mut transform = Transform::from_scale(Vec3::splat(5.0));
     transform.translation.x = 0.0;
-    transform.translation.z = 10.0;
+    transform.translation.z = z_index::ENEMY;
     child_builder    
         .spawn_bundle(SpriteSheetBundle {
             texture_atlas: texture_atlas_handle,

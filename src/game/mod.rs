@@ -25,6 +25,7 @@ impl Plugin for GamePlugin {
             .add_system(timing::update.system())
             .add_system(animation::animate_sprite_system.system())
             .add_system(scenes::battle::handle_battle_events.system())
+            .add_system(gameplay::stats::update_max_stats.system())
             .add_system_set(
                 SystemSet::on_update(GameState::Loading).with_system(loading::loading.system()),
             )
@@ -67,7 +68,8 @@ impl Plugin for GamePlugin {
             // Battle View
             .add_system_set(
                 SystemSet::on_update(GameState::BattleView)
-                    .with_system(camera::camera_movement.system()),
+                    .with_system(camera::camera_movement.system())
+                    .with_system(scenes::battle::update_health_text.system()),
             )
             .add_system_set(
                 SystemSet::on_exit(GameState::BattleView)
