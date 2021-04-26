@@ -231,14 +231,16 @@ pub fn generate_map(
         let road_path = find_road_path(&road_points, &mut tilemap);
         map.road_path = road_path;
 
-        let random_road_index = random.gen_range(0..map.road_path.len() - 1);
-        let road_point = map.road_path[random_road_index];
-        spawner::spawn(
-            &mut commands,
-            &asset_server,
-            &mut materials,
-            Vec2::new(road_point.0 as f32 * 16.0, road_point.1 as f32 * 16.0) + Vec2::new(8.0, 8.0),
-        );
+        for _ in 0..10 {
+            let random_road_index = random.gen_range(0..map.road_path.len() - 1);
+            let road_point = map.road_path[random_road_index];
+            spawner::spawn(
+                &mut commands,
+                &asset_server,
+                &mut materials,
+                Vec2::new(road_point.0 as f32 * 16.0, road_point.1 as f32 * 16.0) + Vec2::new(8.0, 8.0),
+            );
+        }
     }
     game_state.set(GameState::MapView).unwrap();
 }

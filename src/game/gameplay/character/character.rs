@@ -1,4 +1,3 @@
 #[derive(Default, Clone, Debug)]
-pub struct Player {
-
+pub struct Character {
 }

@@ -19,14 +19,22 @@ pub fn check(
 
         enemies_within_range.sort_by(|a, b| { a.0.partial_cmp(&b.0).unwrap() });
 
+        let mut collided_with_enemy = false;
+        let mut enemy_collisions = Vec::new();
         for (distance, enemy_entity, _enemy_transform) in enemies_within_range.iter() {
             if *distance < 8.0 {
-                game_state.set(GameState::BattleView).unwrap();
-                battle_event_writer.send(scenes::battle::BattleEvent {
-                    battle_location: scenes::battle::BattleLocation::Mountains,
-                    enemy_entity: *enemy_entity,
-                });
+                collided_with_enemy = true;
+                enemy_collisions.push(enemy_entity);
             }
+        }
+
+        // TODO: Handle multiple collisions.
+        if collided_with_enemy {
+            game_state.set(GameState::BattleView).unwrap();
+            battle_event_writer.send(scenes::battle::BattleEvent {
+                battle_location: scenes::battle::BattleLocation::Mountains,
+                enemy_entity: *enemy_collisions[0],
+            });
         }
     }
 }

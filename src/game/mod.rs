@@ -7,6 +7,7 @@ mod gameplay;
 mod loading;
 mod map;
 mod timing;
+pub mod helpers;
 
 use self::{camera::CustomOrthographicProjection, gameplay::scenes};
 pub use game_state::GameState;
@@ -36,7 +37,7 @@ impl Plugin for GamePlugin {
                 SystemSet::on_update(GameState::Generating)
                     .with_system(map::generate_map.system())
                     .after("spawn_map")
-                    .with_system(gameplay::player::spawn_player.system())
+                    .with_system(gameplay::character::spawn_player.system())
                     .after("spawn_map"),
             )
             .add_system_set(
@@ -52,8 +53,8 @@ impl Plugin for GamePlugin {
                 SystemSet::on_update(GameState::MapView)
                     .label("gameplay_update")
                     .with_system(gameplay::camera::movement.system())
-                    .with_system(gameplay::player::movement.system())
-                    .with_system(gameplay::player::collision::check.system())
+                    .with_system(gameplay::character::movement.system())
+                    .with_system(gameplay::character::collision::check.system())
             )
             .add_system_set(
                 // Realtime update
@@ -72,7 +73,6 @@ impl Plugin for GamePlugin {
                 SystemSet::on_exit(GameState::BattleView)
                     .with_system(scenes::battle::clear_battle_screen.system()),
             )
-            .add_system(gameplay::attributes::update_health.system())
             .add_system_to_stage(
                 CoreStage::PostUpdate,
                 bevy::render::camera::camera_system::<CustomOrthographicProjection>

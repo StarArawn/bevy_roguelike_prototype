@@ -8,9 +8,12 @@ pub fn spawn(
     mut current_camera: ResMut<CurrentCamera>,
     mut tilemap_query: Query<&mut Tilemap>,
 ) {
+    let mut ortho = CustomOrthographicCameraBundle::new_2d();
+    ortho.orthographic_projection.scale = 0.5;
+
     let camera_entity = commands
         .spawn()
-        .insert_bundle(CustomOrthographicCameraBundle::new_2d())
+        .insert_bundle(ortho)
         .insert(CameraData::default())
         .insert(RenderLayers::layer(0))
         .id();

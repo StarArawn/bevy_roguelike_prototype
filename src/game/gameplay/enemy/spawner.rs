@@ -64,8 +64,8 @@ pub fn tick(
             spawn_enemy(
                 &mut commands,
                 &asset_server,
-                &mut materials,
                 &mut texture_atlases,
+                &mut materials,
                 Vec2::new(transform.translation.x, transform.translation.y) + offset,
             );
             spawner.last_time = current_time;

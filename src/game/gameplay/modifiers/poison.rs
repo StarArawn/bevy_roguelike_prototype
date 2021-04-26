@@ -1,6 +1,9 @@
-use super::Modifier;
+use bevy::prelude::*;
+use crate::game::gameplay::{attributes::{AttributeNames}, stats::Health};
 
+#[derive(Clone, Debug)]
 pub struct Poison {
+    parent: Entity,
     last_update: f64,
     current: u32,
     // Time in seconds before the modifier applies itself to the attribute.
@@ -12,8 +15,15 @@ pub struct Poison {
 }
 
 impl Poison {
-    pub fn new(seconds: f32, damage: f32, total: u32) -> Self {
+
+    pub fn apply(child_builder: &mut ChildBuilder, parent: Entity, seconds: f32, damage: f32, total: u32) {
+        child_builder.spawn()
+            .insert(Poison::new(parent, seconds, damage, total));
+    }
+
+    pub fn new(parent: Entity, seconds: f32, damage: f32, total: u32) -> Self {
         Self {
+            parent,
             last_update: 0.0,
             current: 0,
             seconds: seconds as f64,
@@ -21,10 +31,8 @@ impl Poison {
             total,
         }
     }
-}
 
-impl Modifier for Poison {
-    fn modify_tick(&mut self, time: &bevy::core::Time, mut current_attr_value: f32, _max: f32) -> (f32, bool) {
+    pub fn tick(&mut self, time: &bevy::core::Time, mut current_attr_value: f32) -> (f32, bool) {
         if self.current >= self.total {
             return (current_attr_value, false);
         }
@@ -34,17 +42,31 @@ impl Modifier for Poison {
         if (current_time - self.last_update) >= self.seconds {
             // Apply damage
             current_attr_value -= self.damage;
-            self.total += 1;
+            self.current += 1;
         }
 
         (current_attr_value, true)
     }
 
-    fn modify(&mut self, _current: f32, _max: f32) -> f32 {
-        todo!()
-    }
+}
 
-    fn get_type(&self) -> super::ModifierType {
-        super::ModifierType::TICK
+pub fn update(
+    time: Res<Time>,
+    mut commands: Commands,
+    mut poison_query: Query<(Entity, &mut Poison)>,
+    mut health_query: Query<&mut Health>,
+) {
+    for (entity, mut poison) in poison_query.iter_mut() {
+        let health = health_query.get_mut(poison.parent);
+        if health.is_ok() {
+            let mut health = health.unwrap();
+            let (new_value, should_continue) = poison.tick(&time, health.value);
+            health.value = new_value;
+            if !should_continue {
+                commands.entity(entity).despawn_recursive();
+            }
+        } else {
+            commands.entity(entity).despawn_recursive();
+        }
     }
 }

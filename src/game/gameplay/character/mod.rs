@@ -1,13 +1,13 @@
 use bevy::{prelude::*, render::camera::RenderLayers};
+use super::stats::Health;
 
 mod movement;
-mod player;
+mod character;
 pub mod collision;
-pub use player::Player;
-
+pub use character::Character;
 pub use movement::movement;
 
-use super::{attributes::Health, modifiers::Poison};
+use super::attributes::*;
 
 #[derive(Default)]
 pub struct PlayerSprite {
@@ -21,9 +21,11 @@ pub fn spawn_player(
     mut materials: ResMut<Assets<ColorMaterial>>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
-    commands.spawn()
-        .insert(Player::default())
-        .insert(Health::new(100.0));
+    let character = commands.spawn()
+        .insert(Character::default())
+        .insert(Health::new(100.0))
+        .id();
+    build_basic_character_attributes(&mut commands, character);
 
     let map_player_texture_handle = asset_server.load("textures/player_sprite.png");
     let map_player_sprite_material = materials.add(map_player_texture_handle.into());
@@ -42,6 +44,7 @@ pub fn spawn_player(
         TextureAtlas::from_grid(battle_player_texture_handle, Vec2::new(150.0, 150.0), 8, 1);
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
     let mut transform = Transform::from_scale(Vec3::splat(5.0));
+    transform.translation.x = -800.0;
     transform.translation.z = 2.0;
     commands
         .spawn_bundle(SpriteSheetBundle {
