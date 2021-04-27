@@ -92,7 +92,6 @@ fn drink_potion_action_system(
     mut query: Query<(&Actor, &mut ActionState), With<DrinkPotion>>,
 ) {
     for (Actor(actor), mut state) in query.iter_mut() {
-        // Use the drink_action's actor to look up the corresponding Thirst.
         if let Ok(mut health) = health.get_mut(*actor) {
             match *state {
                 ActionState::Requested => {
