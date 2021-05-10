@@ -1,6 +1,9 @@
 use bevy::prelude::*;
-use bevy_tilemap::prelude::*;
-use crate::game::{GameState};
+use bevy_ecs_tilemap::prelude::*;
+
+use crate::game::GameState;
+
+use super::map::{MapLayer, RoadLayer};
 
 #[derive(Default, Clone)]
 pub struct TilemapAtlasHandles {
@@ -9,57 +12,40 @@ pub struct TilemapAtlasHandles {
 
 pub fn spawn_map_entity(
     mut commands: Commands,
+    mut game_state: ResMut<State<GameState>>,
     tilemap_atlas_handles: Res<TilemapAtlasHandles>,
-    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
     mut textures: ResMut<Assets<Texture>>,
+    mut materials: ResMut<Assets<ColorMaterial>>,
+    mut meshes: ResMut<Assets<Mesh>>,
 ) {
     let tilemap_atlas_handle = tilemap_atlas_handles.handles[0].clone().typed::<Texture>();
     let atlas_texture = textures.get_mut(tilemap_atlas_handle.clone()).unwrap();
     atlas_texture.sampler.min_filter = bevy::render::texture::FilterMode::Nearest;
-    atlas_texture.sampler.mag_filter = bevy::render::texture::FilterMode::Nearest;
-    atlas_texture.sampler.mipmap_filter = bevy::render::texture::FilterMode::Nearest;
+    let material_handle = materials.add(ColorMaterial::texture(tilemap_atlas_handle));
 
-    let texture_atlas = TextureAtlas::from_grid(tilemap_atlas_handle, Vec2::new(16.0, 16.0), 6, 16);
+    let map_settings = MapSettings::new(UVec2::new(10, 10), UVec2::new(32, 32), Vec2::new(16.0, 16.0), Vec2::new(96.0, 256.0), 0);
 
-    let atlas_handle = texture_atlases.add(texture_atlas);
+    let mut layer_settings = map_settings.clone();
+    layer_settings.layer_id = 0;
+    let map_layer_entity = commands.spawn().id();
+    let mut map_layer = Map::new(layer_settings);
+    map_layer.build(&mut commands, &mut meshes, material_handle.clone(), map_layer_entity, false);
+    commands.entity(map_layer_entity).insert_bundle(MapBundle {
+        map: map_layer,
+        transform: Transform::from_xyz(-2560.0, -2560.0, 0.0),
+        ..Default::default()
+    }).insert(MapLayer);
 
-    let tilemap = Tilemap::builder()
-        .auto_chunk()
-        .topology(GridTopology::Square)
-        .dimensions(10, 10)
-        .chunk_dimensions(32, 32, 1)
-        .texture_dimensions(16, 16)
-        .z_layers(2)
-        .add_layer(
-            TilemapLayer {
-                kind: LayerKind::Dense,
-                ..Default::default()
-            },
-            0,
-        )
-        .add_layer(
-            TilemapLayer {
-                kind: LayerKind::Sparse,
-                ..Default::default()
-            },
-            1,
-        )
-        .texture_atlas(atlas_handle)
-        .finish()
-        .unwrap();
+    let mut layer_settings = map_settings.clone();
+    layer_settings.layer_id = 1;
+    let road_layer_entity = commands.spawn().id();
+    let mut road_layer = Map::new(layer_settings);
+    road_layer.build(&mut commands, &mut meshes, material_handle.clone(), road_layer_entity, false);
+    commands.entity(road_layer_entity).insert_bundle(MapBundle {
+        map: road_layer,
+        transform: Transform::from_xyz(-2560.0, -2560.0, 1.0),
+        ..Default::default()
+    }).insert(RoadLayer);
 
-    let tilemap_components = TilemapBundle {
-        tilemap,
-        visible: Visible {
-            is_visible: true,
-            is_transparent: true,
-        },
-        transform: Default::default(),
-        global_transform: Default::default(),
-    };
-
-    commands
-        .spawn()
-        .insert(GameState::MapView)
-        .insert_bundle(tilemap_components);
+    game_state.set(GameState::GenerateMap);
 }

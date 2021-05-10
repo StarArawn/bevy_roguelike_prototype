@@ -5,11 +5,11 @@ mod get_has_map_assets;
 mod map;
 mod spawn_map_entity;
 
-pub use self::map::Map;
+pub use self::map::MapData;
 pub use get_has_map_assets::get_has_map_assets;
 pub use spawn_map_entity::TilemapAtlasHandles;
 
-pub use generate_map::generate_map;
+pub use generate_map::{generate_map, generate_road};
 pub use spawn_map_entity::spawn_map_entity;
 
 pub fn setup(
@@ -25,7 +25,7 @@ pub struct MapPlugin;
 impl Plugin for MapPlugin {
     fn build(&self, app: &mut AppBuilder) {
         app.init_resource::<TilemapAtlasHandles>()
-            .init_resource::<Map>()
+            .init_resource::<MapData>()
             .add_startup_system(setup.system());
     }
 }

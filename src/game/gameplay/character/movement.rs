@@ -1,11 +1,11 @@
-use crate::game::map::Map;
+use crate::game::map::MapData;
 use bevy::prelude::*;
 
 use super::PlayerSprite;
 
 pub fn movement(
     time: Res<Time>,
-    map: Res<Map>,
+    map: Res<MapData>,
     mut player_query: Query<(&mut PlayerSprite, &mut Transform)>,
 ) {
     if map.road_path.len() > 0 {

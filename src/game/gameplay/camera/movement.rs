@@ -1,4 +1,4 @@
-use bevy::{prelude::*, render::camera::{Camera, CameraProjection}};
+use bevy::{prelude::*, render::camera::{Camera, CameraProjection, OrthographicProjection}};
 
 use crate::game::{camera::{CameraData, CustomOrthographicProjection}, gameplay::character::PlayerSprite};
 
@@ -10,7 +10,7 @@ pub fn movement(
         &mut CameraData,
         &mut Camera,
         &mut Transform,
-        &mut CustomOrthographicProjection,
+        &mut OrthographicProjection,
     )>,
 ) {
     let mut player_position = Vec3::ZERO;
@@ -20,7 +20,7 @@ pub fn movement(
     for (mut camera_data, mut camera, mut camera_transform, mut projection) in camera_query.iter_mut() {
         let camera_z = camera_transform.translation.z;
         
-        camera_transform.translation = camera_transform.translation.truncate().lerp(player_position.truncate(), 0.01).extend(camera_z);
+        // camera_transform.translation = camera_transform.translation.truncate().lerp(player_position.truncate(), 0.01).extend(camera_z);
 
         projection.update(
             windows.get_primary().unwrap().width(),

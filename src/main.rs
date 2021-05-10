@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
 use bevy::prelude::*;
-use bevy_tilemap::prelude::*;
+use bevy_ecs_tilemap::prelude::*;
 
 mod game;
 
@@ -14,7 +14,7 @@ fn main() {
             ..Default::default()
         })
         .add_plugins(DefaultPlugins)
-        .add_plugins(TilemapDefaultPlugins)
+        .add_plugin(TilemapPlugin)
         .add_plugin(game::GamePlugin)
         .run();
 }

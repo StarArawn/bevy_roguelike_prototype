@@ -1,6 +1,4 @@
 use bevy::prelude::*;
-use rand::{thread_rng, Rng};
-
 use crate::game::GameState;
 use super::spawn_enemy;
 
@@ -55,12 +53,10 @@ pub fn tick(
         Vec2::new(0.0, -16.0),
     ];
 
-    let mut random = thread_rng();
-
     for (transform, mut spawner) in spawner_query.iter_mut() {
         let spawner_elapsed_time = current_time - spawner.last_time;
         if spawner_elapsed_time > spawner.wait_time && spawner.current < spawner.limit {
-            let offset = spawn_pos[random.gen_range(0..4)];
+            let offset = spawn_pos[fastrand::usize(0..4)];
             spawn_enemy(
                 &mut commands,
                 &asset_server,

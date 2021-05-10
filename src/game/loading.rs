@@ -14,6 +14,6 @@ pub fn loading(
     if asset_server.get_group_load_state(textures.iter().map(|(handle_id, _)| handle_id)) == LoadState::Loaded &&
         get_has_map_assets(asset_server, tilemap_atlas_handles)
     {
-        game_state.set(GameState::Generating).unwrap();
+        game_state.set(GameState::SpawnMap).unwrap();
     }
 }

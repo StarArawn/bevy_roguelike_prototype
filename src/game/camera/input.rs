@@ -1,8 +1,5 @@
 use crate::game::GameState;
-use bevy::{
-    prelude::*,
-    render::camera::Camera,
-};
+use bevy::{prelude::*, render::camera::{Camera, OrthographicProjection}};
 
 use super::CustomOrthographicProjection;
 
@@ -32,7 +29,7 @@ pub fn camera_movement(
     mut query: Query<(
         &mut Camera,
         &mut Transform,
-        &mut CustomOrthographicProjection,
+        &mut OrthographicProjection,
     )>,
     time: Res<Time>,
     _windows: Res<Windows>,
@@ -50,7 +47,7 @@ pub fn camera_movement(
 
     for (mut _camera, mut transform, mut projection) in query.iter_mut() {
         let mut direction = Vec3::ZERO;
-        let scale = projection.scale;
+        let scale = transform.scale.x;
 
         if keyboard_input.pressed(KeyCode::A) {
             direction -= Vec3::new(1.0, 0.0, 0.0);
@@ -70,15 +67,13 @@ pub fn camera_movement(
 
         if keyboard_input.pressed(KeyCode::Z) && scale < 6.0 {
             let scale = ((scale + (time.delta_seconds() * 1.5)) * 100.0).round() / 100.0;
-            projection.scale = scale;
+            transform.scale = Vec3::splat(scale);
         }
 
         if keyboard_input.pressed(KeyCode::X) && scale > 0.5 {
             let scale = ((scale - (time.delta_seconds() * 1.5)) * 100.0).round() / 100.0;
-            projection.scale = scale;
+            transform.scale = Vec3::splat(scale);
         }
-
-
 
         transform.translation += time.delta_seconds() * direction * 1000.;
     }

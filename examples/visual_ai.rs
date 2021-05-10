@@ -1,9 +1,8 @@
 use bevy::{prelude::*};
 use big_brain::prelude::*;
-use rand::{thread_rng, Rng};
 
-const HALF_WIDTH: f32 = (1270.0 / 2.0) - 32.0;
-const HALF_HEIGHT: f32 = (720.0 / 2.0) - 32.0;
+const HALF_WIDTH: i32 = (1270 / 2) - 32;
+const HALF_HEIGHT: i32 = (720 / 2) - 32;
 
 struct Moving;
 
@@ -122,10 +121,9 @@ fn move_system(
         match *state {
             ActionState::Requested => {
                 if let Ok(mut target) = target_query.get_mut(actor.0) {
-                    let mut random = thread_rng();
                     let random_target = Vec2::new(
-                        random.gen_range(-HALF_WIDTH..HALF_WIDTH),
-                        random.gen_range(-HALF_HEIGHT..HALF_HEIGHT),
+                        fastrand::i32(-HALF_WIDTH..HALF_WIDTH) as f32,
+                        fastrand::i32(-HALF_HEIGHT..HALF_HEIGHT) as f32,
                     );
                     if target.value == Vec2::ZERO {
                         target.value = random_target;
@@ -242,11 +240,9 @@ fn startup(
     let potion_texture = asset_server.load("textures/health_potion.png");
     let potion_material = materials.add(potion_texture.into());
 
-    let mut random = thread_rng();
-
     for _ in 0..500 {
-        let x = random.gen_range(-HALF_WIDTH..HALF_WIDTH);
-        let y = random.gen_range(-HALF_HEIGHT..HALF_HEIGHT);
+        let x = fastrand::i32(-HALF_WIDTH..HALF_WIDTH) as f32;
+        let y = fastrand::i32(-HALF_HEIGHT..HALF_HEIGHT) as f32;
         commands.spawn_bundle(SpriteBundle {
             material: potion_material.clone(),
             transform: Transform::from_xyz(x, y, 0.0),
