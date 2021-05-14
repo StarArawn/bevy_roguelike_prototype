@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, render::camera::RenderLayers};
 use crate::game::GameState;
 use super::spawn_enemy;
 
@@ -17,7 +17,8 @@ pub fn spawn(
     materials: &mut ResMut<Assets<ColorMaterial>>,
     position: Vec2,
 ) {
-    let texture_handle: Handle<Texture> = asset_server.load("textures/cave_sprite.png");
+    dbg!(position);
+    let texture_handle: Handle<Texture> = asset_server.get_handle("textures/cave_sprite.png");
     let cave_sprite_material = materials.add(texture_handle.into());
     commands
         .spawn_bundle(SpriteBundle {
@@ -25,7 +26,7 @@ pub fn spawn(
             transform: Transform::from_xyz(position.x, position.y, 10.0),
             ..Default::default()
         })
-        .insert(GameState::MapView)
+        .insert(RenderLayers::layer(0))
         .insert(Spawner {
             wait_time: 10.0,
             last_time: 0.0,

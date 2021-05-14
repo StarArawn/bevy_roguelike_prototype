@@ -39,7 +39,7 @@ pub fn handle_battle_events(
 ) {
     for event in battle_events.iter() {
         let texture_handle: Handle<Texture> =
-            asset_server.load(get_battle_location_texture(event.battle_location));
+            asset_server.get_handle(get_battle_location_texture(event.battle_location));
         let background_sprite = materials.add(texture_handle.into());
 
         // Get character entity..
@@ -103,7 +103,7 @@ pub fn handle_battle_events(
                         // Accepts a `String` or any type that converts into a `String`, such as `&str`
                         "Health: ",
                         TextStyle {
-                            font: asset_server.load("FiraMono-Medium.ttf"),
+                            font: asset_server.get_handle("FiraMono-Medium.ttf"),
                             font_size: 24.0,
                             color: Color::WHITE,
                         },

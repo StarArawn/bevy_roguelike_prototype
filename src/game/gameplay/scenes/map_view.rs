@@ -6,7 +6,6 @@ use crate::game::{camera::{CameraData, CurrentCamera}};
 pub fn spawn(
     mut commands: Commands,
     mut current_camera: ResMut<CurrentCamera>,
-    mut tilemap_query: Query<&mut Map>,
 ) {
     let mut ortho = OrthographicCameraBundle::new_2d();
     ortho.orthographic_projection.scale = 0.5;
@@ -15,42 +14,15 @@ pub fn spawn(
         .spawn()
         .insert_bundle(ortho)
         .insert(CameraData::default())
-        // .insert(RenderLayers::layer(0))
+        .insert(RenderLayers::layer(0))
         .id();
 
     current_camera.camera = Some(camera_entity);
-
-    for mut tilemap in tilemap_query.iter_mut() {
-        // let map_width = tilemap.width().unwrap() as i32;
-        // let map_height = tilemap.height().unwrap() as i32;
-        // let half_map_width = map_width / 2;
-        // let half_map_height = map_height / 2;
-
-        // for x in -half_map_width..half_map_width {
-        //     for y in -half_map_height..half_map_height {
-        //         tilemap.spawn_chunk((x, y)).unwrap();
-        //     }
-        // }
-    }
 }
 
 pub fn destroy(
     mut commands: Commands,
     mut current_camera: ResMut<CurrentCamera>,
-    mut tilemap_query: Query<&mut Map>,
 ) {
     commands.entity(current_camera.camera.take().unwrap()).despawn_recursive();
-
-    for mut tilemap in tilemap_query.iter_mut() {
-        // let map_width = tilemap.width().unwrap() as i32;
-        // let map_height = tilemap.height().unwrap() as i32;
-        // let half_map_width = map_width / 2;
-        // let half_map_height = map_height / 2;
-
-        // for x in -half_map_width..half_map_width {
-        //     for y in -half_map_height..half_map_height {
-        //         tilemap.despawn_chunk((x, y)).unwrap();
-        //     }
-        // }
-    }
 }

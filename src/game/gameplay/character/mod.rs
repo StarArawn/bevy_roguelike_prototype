@@ -27,7 +27,7 @@ pub fn spawn_player(
         .id();
     build_basic_character_attributes(&mut commands, character);
 
-    let map_player_texture_handle = asset_server.load("textures/player_sprite.png");
+    let map_player_texture_handle = asset_server.get_handle("textures/player_sprite.png");
     let map_player_sprite_material = materials.add(map_player_texture_handle.into());
     commands
         .spawn_bundle(SpriteBundle {
@@ -39,7 +39,7 @@ pub fn spawn_player(
         .insert(RenderLayers::layer(0));
 
 
-    let battle_player_texture_handle = asset_server.load("textures/characters/huntress/idle.png");
+    let battle_player_texture_handle = asset_server.get_handle("textures/characters/huntress/idle.png");
     let texture_atlas =
         TextureAtlas::from_grid(battle_player_texture_handle, Vec2::new(150.0, 150.0), 8, 1);
     let texture_atlas_handle = texture_atlases.add(texture_atlas);

@@ -14,14 +14,28 @@ pub use game_state::GameState;
 
 pub struct GamePlugin;
 
+#[derive(Default)]
+pub struct LoadingHandles(Vec<HandleUntyped>);
+
+fn load_data(
+    asset_server: Res<AssetServer>,
+    mut loading_handles: ResMut<LoadingHandles>,
+) {
+    let load_handles = asset_server.load_folder("textures").unwrap();
+    asset_server.load::<Font, &'static str>("FiraMono-Medium.ttf");
+
+    loading_handles.0 = load_handles;
+}
+
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut AppBuilder) {
         app.add_state(GameState::default())
-            .add_plugin(map::MapPlugin)
+            .init_resource::<LoadingHandles>()
             .init_resource::<timing::Timing>()
             .init_resource::<camera::CurrentCamera>()
             .register_type::<CustomOrthographicProjection>()
             .add_event::<scenes::battle::BattleEvent>()
+            .add_startup_system(load_data.system())
             .add_system(timing::update.system())
             .add_system(animation::animate_sprite_system.system())
             .add_system(scenes::battle::handle_battle_events.system())

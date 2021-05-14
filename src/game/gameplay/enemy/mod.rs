@@ -22,7 +22,7 @@ pub fn spawn_enemy(
         .insert(Transform::from_xyz(position.x, position.y, 11.0))
         .insert(Enemy::default())
         .with_children(|child_builder| {
-            let texture_handle: Handle<Texture> = asset_server.load("textures/enemies/skeleton/idle.png");
+            let texture_handle: Handle<Texture> = asset_server.get_handle("textures/enemies/skeleton/idle.png");
             let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(150.0, 150.0), 4, 1);
             let texture_atlas_handle = texture_atlases.add(texture_atlas);
             child_builder    
@@ -46,7 +46,7 @@ pub fn create_battle_enemy(
     asset_server: &Res<AssetServer>,
     texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
 ) {
-    let texture_handle: Handle<Texture> = asset_server.load("textures/enemies/skeleton/idle.png");
+    let texture_handle: Handle<Texture> = asset_server.get_handle("textures/enemies/skeleton/idle.png");
     let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(150.0, 150.0), 4, 1);
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
 
