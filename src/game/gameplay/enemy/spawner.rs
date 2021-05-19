@@ -1,5 +1,4 @@
 use bevy::{prelude::*, render::camera::RenderLayers};
-use crate::game::GameState;
 use super::spawn_enemy;
 
 #[derive(Default)]
@@ -17,7 +16,6 @@ pub fn spawn(
     materials: &mut ResMut<Assets<ColorMaterial>>,
     position: Vec2,
 ) {
-    dbg!(position);
     let texture_handle: Handle<Texture> = asset_server.get_handle("textures/cave_sprite.png");
     let cave_sprite_material = materials.add(texture_handle.into());
     commands

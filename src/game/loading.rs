@@ -7,9 +7,8 @@ pub fn loading(
     mut game_state: ResMut<State<GameState>>,
     loading_handles: Res<LoadingHandles>,
 ) {
-    dbg!(loading_handles.0.len());
     if asset_server.get_group_load_state(loading_handles.0.iter().map(|handle_id| handle_id.id)) == LoadState::Loaded
     {
-        game_state.set(GameState::SpawnMap).unwrap();
+        game_state.set(GameState::GenerateMap).unwrap();
     }
 }

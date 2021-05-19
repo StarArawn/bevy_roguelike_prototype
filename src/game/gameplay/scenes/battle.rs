@@ -1,6 +1,6 @@
 use bevy::{prelude::*, render::camera::RenderLayers};
 
-use crate::game::{camera::CustomOrthographicCameraBundle, gameplay::{character::Character, enemy::create_battle_enemy, stats::{Stat, StatName, StatsQuery}}, helpers::z_index};
+use crate::game::{camera::CustomOrthographicCameraBundle, gameplay::{character::Character, enemy::create_battle_enemy, stats::{StatName, StatsQuery}}, helpers::z_index};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum BattleLocation {

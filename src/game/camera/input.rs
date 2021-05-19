@@ -1,8 +1,5 @@
 use crate::game::GameState;
-use bevy::{prelude::*, render::camera::{Camera, OrthographicProjection}};
-
-use super::CustomOrthographicProjection;
-
+use bevy::{prelude::*, render::camera::Camera};
 pub struct KeyboardConf {
     pub forward: Box<[KeyCode]>,
     pub backward: Box<[KeyCode]>,
@@ -26,11 +23,10 @@ impl Default for KeyboardConf {
 pub fn camera_movement(
     mut game_state: ResMut<State<GameState>>,
     mut keyboard_input: ResMut<Input<KeyCode>>,
-    mut query: Query<(
-        &mut Camera,
+    mut query: Query<
         &mut Transform,
-        &mut OrthographicProjection,
-    )>,
+        With<Camera>
+    >,
     time: Res<Time>,
     _windows: Res<Windows>,
 ) {
@@ -45,7 +41,7 @@ pub fn camera_movement(
         return;
     }
 
-    for (mut _camera, mut transform, mut projection) in query.iter_mut() {
+    for mut transform in query.iter_mut() {
         let mut direction = Vec3::ZERO;
         let scale = transform.scale.x;
 

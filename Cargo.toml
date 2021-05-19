@@ -9,7 +9,7 @@ edition = "2018"
 [dependencies]
 bevy = "0.5"
 bevy_egui = "0.4"
-bevy_ecs_tilemap = { git="https://github.com/StarArawn/bevy_ecs_tilemap", rev="eb299daf347fd135149c7135b4b2a60b7b4c4f4f" }
+bevy_ecs_tilemap = { git="https://github.com/StarArawn/bevy_ecs_tilemap", rev="d3b6e3a1a3fab08a417374c826fa8537a896cdf5" }
 big-brain = "0.5"
 noise = "0.7"
 pathfinding = "2.1"

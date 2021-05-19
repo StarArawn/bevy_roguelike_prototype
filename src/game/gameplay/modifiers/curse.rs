@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use serde::{Deserialize, Serialize};
-use crate::game::gameplay::attributes::{AttributeNames};
+// use crate::game::gameplay::attributes::{AttributeNames};
 
 #[derive(Deserialize, Serialize, Debug, Clone, Copy)]
 pub struct Curse {

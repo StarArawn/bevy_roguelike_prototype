@@ -1,7 +1,6 @@
 use bevy::{prelude::*, render::camera::RenderLayers};
-use bevy_ecs_tilemap::prelude::*;
 
-use crate::game::{camera::{CameraData, CurrentCamera}};
+use crate::game::{camera::{CurrentCamera}};
 
 pub fn spawn(
     mut commands: Commands,
@@ -13,7 +12,6 @@ pub fn spawn(
     let camera_entity = commands
         .spawn()
         .insert_bundle(ortho)
-        .insert(CameraData::default())
         .insert(RenderLayers::layer(0))
         .id();
 

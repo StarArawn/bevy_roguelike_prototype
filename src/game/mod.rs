@@ -45,22 +45,11 @@ impl Plugin for GamePlugin {
                     .with_system(loading::loading.system()),
             )
             .add_system_set(
-                SystemSet::on_update(GameState::SpawnMap)
-                    .with_system(map::spawn_map_entity.system()),
-            )
-            .add_system_set(
                 SystemSet::on_enter(GameState::GenerateMap)
                     .with_system(
-                        map::generate_map.system()
+                        map::spawn_map_entity.system()
                     )
-            )
-            .add_system_set(
-                SystemSet::on_enter(GameState::GenerateRoads)
-                    .with_system(
-                        map::generate_road.system()
-                        .label("generate_roads")
-                    )
-                    .with_system(gameplay::character::spawn_player.system().after("generate_roads")),
+                    .with_system(gameplay::character::spawn_player.system())
             )
             .add_system_set(
                 SystemSet::on_enter(GameState::MapView)

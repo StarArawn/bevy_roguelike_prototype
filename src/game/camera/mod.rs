@@ -8,9 +8,3 @@ pub use ortho::{CustomOrthographicCameraBundle, CustomOrthographicProjection};
 pub struct CurrentCamera {
     pub camera: Option<Entity>,
 }
-
-#[derive(Default)]
-pub struct CameraData {
-    // Used to lerp camera.
-    pub value: f32,
-}
