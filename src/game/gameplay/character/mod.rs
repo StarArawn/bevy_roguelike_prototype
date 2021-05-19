@@ -1,5 +1,5 @@
 use bevy::{prelude::*, render::camera::RenderLayers};
-use super::stats::Health;
+use super::stats::{Stat, StatName};
 
 mod movement;
 mod character;
@@ -23,7 +23,6 @@ pub fn spawn_player(
 ) {
     let character = commands.spawn()
         .insert(Character::default())
-        .insert(Health::new(100.0))
         .id();
     build_basic_character_attributes(&mut commands, character);
 

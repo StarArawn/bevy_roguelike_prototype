@@ -1,7 +1,8 @@
 use bevy::prelude::*;
-use crate::game::gameplay::{attributes::{AttributeNames}, stats::Health};
+use serde::{Deserialize, Serialize};
+use crate::game::gameplay::{stats::{StatName, StatsQuery}};
 
-#[derive(Clone, Debug)]
+#[derive(Deserialize, Serialize, Copy, Clone, Debug)]
 pub struct Poison {
     parent: Entity,
     last_update: f64,
@@ -54,12 +55,12 @@ pub fn update(
     time: Res<Time>,
     mut commands: Commands,
     mut poison_query: Query<(Entity, &mut Poison)>,
-    mut health_query: Query<&mut Health>,
+    mut stats_query: StatsQuery,
 ) {
     for (entity, mut poison) in poison_query.iter_mut() {
-        let health = health_query.get_mut(poison.parent);
-        if health.is_ok() {
-            let mut health = health.unwrap();
+        let health = stats_query.get_stat(poison.parent, StatName::Health);
+        if health.is_some() {
+            let (_, mut health) = health.unwrap();
             let (new_value, should_continue) = poison.tick(&time, health.value);
             health.value = new_value;
             if !should_continue {

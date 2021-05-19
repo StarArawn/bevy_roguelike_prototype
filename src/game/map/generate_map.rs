@@ -1,5 +1,5 @@
 use crate::game::{gameplay::enemy::spawner, GameState};
-use bevy::{asset::Asset, prelude::*};
+use bevy::{prelude::*};
 use bevy_ecs_tilemap::prelude::*;
 use noise::{Fbm, MultiFractal, NoiseFn, Seedable};
 use pathfinding::prelude::{absdiff, astar};
@@ -126,7 +126,7 @@ pub fn find_road_path(
                     
                     neighbors
                         .iter()
-                        .filter(|(p, entity)| {
+                        .filter(|(_, entity)| {
                             if entity.is_some() {
                                 if let Ok(tile) = tile_query.get(entity.unwrap()) {
                                     // 19 is water.
@@ -231,22 +231,6 @@ pub fn generate_map(
 
         commands.entity(map_entity).insert(MapSeed(seed));
 
-        // road_points.push(road_points[0]);
-
-        // let road_path = find_road_path(&road_points, &mut tilemap);
-        // map.road_path = road_path;
-
-        // for _ in 0..10 {
-        //     let random_road_index = random.gen_range(0..map.road_path.len() - 1);
-        //     let road_point = map.road_path[random_road_index];
-        //     spawner::spawn(
-        //         &mut commands,
-        //         &asset_server,
-        //         &mut materials,
-        //         Vec2::new(road_point.0 as f32 * 16.0, road_point.1 as f32 * 16.0) + Vec2::new(8.0, 8.0),
-        //     );
-        // }
-
-        game_state.set(GameState::GenerateRoads);
+        game_state.set(GameState::GenerateRoads).unwrap();
     }
 }

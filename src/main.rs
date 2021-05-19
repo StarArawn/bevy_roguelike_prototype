@@ -3,7 +3,7 @@
 use bevy::prelude::*;
 use bevy_ecs_tilemap::prelude::*;
 
-mod game;
+pub mod game;
 
 fn main() {
     App::build()

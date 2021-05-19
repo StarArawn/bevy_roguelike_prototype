@@ -38,5 +38,5 @@ pub fn spawn_map_entity(
         });
     }
 
-    game_state.set(GameState::GenerateMap);
+    game_state.set(GameState::GenerateMap).unwrap();
 }

@@ -1,0 +1,34 @@
+(
+    name: "Short Sword"
+    attributes: [
+        (
+            parent: 0,
+            name: Endurance,
+            value: (0..10),
+            base_value: 5,
+        ),
+        (
+            parent: 0,
+            name: Strength,
+            value: 2,
+            base_value: 2,
+        ),
+    ],
+    stats: [
+        (
+            name: Damage,
+            value: 10,
+            max: 0,
+        ),
+    ],
+    modifier: [
+        Poison((
+            parent: 0,
+            last_update: 0,
+            current: 0,
+            seconds: 5,
+            damage: 2,
+            total: 5,
+        )),
+    ],
+)

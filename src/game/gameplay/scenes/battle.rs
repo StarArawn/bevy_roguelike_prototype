@@ -1,6 +1,6 @@
 use bevy::{prelude::*, render::camera::RenderLayers};
 
-use crate::game::{camera::CustomOrthographicCameraBundle, gameplay::{character::Character, enemy::create_battle_enemy, stats::Health}, helpers::z_index};
+use crate::game::{camera::CustomOrthographicCameraBundle, gameplay::{character::Character, enemy::create_battle_enemy, stats::{Stat, StatName, StatsQuery}}, helpers::z_index};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum BattleLocation {
@@ -133,10 +133,10 @@ pub fn handle_battle_events(
 
 pub fn update_health_text(
     mut ui_query: Query<(&HealthUI, &mut Text)>,
-    health_query: Query<&Health>,
+    mut stats_query: StatsQuery,
 ) {
     for (health_ui, mut text) in ui_query.iter_mut() {
-        if let Ok(health_component) = health_query.get(health_ui.entity) {
+        if let Some((_, health_component)) = stats_query.get_stat(health_ui.entity, StatName::Health) {
             text.sections[0].value = format!("Health: {}", health_component.value);
         }
     }

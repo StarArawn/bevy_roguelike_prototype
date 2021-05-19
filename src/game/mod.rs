@@ -1,12 +1,12 @@
 use bevy::{prelude::*, render::RenderSystem};
 
-mod animation;
-mod camera;
-mod game_state;
-mod gameplay;
-mod loading;
-mod map;
-mod timing;
+pub mod animation;
+pub mod camera;
+pub mod game_state;
+pub mod gameplay;
+pub mod loading;
+pub mod map;
+pub mod timing;
 pub mod helpers;
 
 use self::{camera::CustomOrthographicProjection, gameplay::scenes};
